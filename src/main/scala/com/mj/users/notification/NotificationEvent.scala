@@ -1,4 +1,4 @@
-package com.careercolony.postservices.notification
+package com.mj.users.notification
 
 import akka.actor.ActorRef
 import com.mj.users.model.Feed

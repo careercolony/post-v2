@@ -1,9 +1,9 @@
-package com.careercolony.postservices.notification
+package com.mj.users.notification
 
 import akka.actor.{Actor, ActorRef}
 import com.mj.users.mongo.PostDao.{getFriendsUnreadPost,getFriends}
 
-import com.careercolony.postservices.notification.NotificationEvent._
+import com.mj.users.notification.NotificationEvent._
 import com.mj.users.model.{Feed, GetFriends}
 
 import scala.util.{Failure, Success}
@@ -40,13 +40,16 @@ class NotificationActor extends Actor  {
       wsCount -= id
       wsPost -= id
 
-    case getPost: Feed =>
-      getFriends(getPost.memberID).map(friends =>
-        friends.foreach(frd => {
-          wsCount.get(frd.memberID).foreach(_ ! NotificationCount(1))
-          wsPost.get(frd.memberID).foreach(_ ! NotificationPost(List(getPost)))
+    case getPost: Feed => {
+      getFriends(getPost.memberID).map(friends => {
+       friends.foreach(frd => {
+          val memberID = frd.memberID.substring(1, frd.memberID.length()-1)
+          wsCount.get(memberID).foreach(_ ! NotificationCount(1))
+          wsPost.get(memberID).foreach(_ ! NotificationPost(List(getPost)))
         })
+      }
       )
+    }
 
 
   }

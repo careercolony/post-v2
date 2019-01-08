@@ -11,6 +11,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{responseMessage, _}
+import com.mj.users.notification.NotificationRoom
 import org.slf4j.LoggerFactory
 import spray.json._
 
@@ -20,7 +21,7 @@ trait NewPostRoute {
   val newPostUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def newPost(system: ActorSystem): Route = {
+  def newPost(system: ActorSystem , notificationRoom : NotificationRoom): Route = {
 
     val newPostProcessor = system.actorSelection("/*/newPostProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
@@ -30,7 +31,7 @@ trait NewPostRoute {
         post {
           entity(as[PostRequest]) { dto =>
 
-            val userResponse = newPostProcessor ? dto
+            val userResponse = newPostProcessor ? (dto , notificationRoom)
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {

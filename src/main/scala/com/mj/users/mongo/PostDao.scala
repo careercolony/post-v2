@@ -85,8 +85,13 @@ object PostDao {
     val queryOps = QueryOpts(skipN = page.offset, batchSizeN = page.limit, flagsN = 0)
     /*searchWithPagination[Feed](feedCollection,
       BSONDocument("memberID" -> BSONDocument("$in" -> listOfMemberId)), queryOps, sort, page.limit)*/
-    println("listOfMemberId:"+listOfMemberId)
-    val selector = document("memberID" -> /*BSONDocument("$in" -> listOfMemberId)*/"5c2bc9f60b00004900dce0df")
+    println("listOfMemberId:"+listOfMemberId(0).toString.substring(1, listOfMemberId(0).toString.length()-1))
+ /*   val friendList : String =if(listOfMemberId.size == 1)
+      "[" + listOfMemberId(0) + "]"
+     else
+      if(listOfMemberId.nonEmpty) "[" + listOfMemberId.map(_.toString).reduce(_+","+_) + "]" else "[]"
+    println("listOfMemberId:"+friendList)*/
+    val selector = BSONDocument("memberID" -> /*BSONDocument("$in" -> listOfMemberId)*/listOfMemberId(0).toString.substring(1, listOfMemberId(0).toString.length()-1))
     searchAll[Feed](feedCollection,selector)
   }
 

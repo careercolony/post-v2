@@ -12,7 +12,6 @@ import com.mj.users.tools.CommonUtils._
 import com.mj.users.tools.RouteUtils
 import com.typesafe.config.ConfigFactory
 
-
 object Server extends App {
   val seedNodesStr = seedNodes
     .split(",")
@@ -46,9 +45,9 @@ object Server extends App {
   val getCommentCountProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.comment.GetCommentCountProcessor]), "getCommentCountProcessor")
 
 
-
   val sharePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.SharePostProcessor]), "sharePostProcessor")
   val getFriendsPostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.GetFriendsPostProcessor]), "getFriendsPostProcessor")
+
 
   import system.dispatcher
 
