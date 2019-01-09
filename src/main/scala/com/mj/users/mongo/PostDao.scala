@@ -242,7 +242,25 @@ object PostDao {
     }
   }
 
+  def updateReaderFeed(req : ReaderFeedRequest): Future[String] = {
 
+    val selector = BSONDocument("_id" -> req.feedID)
+    val result = for {
+
+      response <- update(feedCollection, selector,
+        BSONDocument("$addToSet" -> BSONDocument("readers" -> req.memberID)))
+    }
+      yield (response)
+
+    result.recover {
+      case e: Throwable => {
+        println("msg:" + e.getMessage)
+        throw new Exception(e.getMessage)
+      }
+
+
+    }
+  }
   def insertNewPostFeed(userRequest: Post, feedType: String): Future[Feed] = {
     for {
       feedData <- Future {

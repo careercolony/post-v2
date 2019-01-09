@@ -56,6 +56,7 @@ case class LikePostRequest(memberID: String, postID: String, like: Option[String
 
 case class LikePostResponse(memberID: String, likeID:String, postID: String, like: Option[String], like_date: String)
 
+case class ReaderFeedRequest(feedID : String , memberID : String)
 
 case class PostShare(memberID: String, postID:String, recipients:Option[List[String]])
 
@@ -88,6 +89,7 @@ object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val postShareRequestFormats: RootJsonFormat[PostShare] = jsonFormat3(PostShare)
   implicit val commentFormats: RootJsonFormat[Comment] = jsonFormat9(Comment)
   implicit val feedFormats: RootJsonFormat[Feed] = jsonFormat8(Feed)
+  implicit val readerFeedRequestFormats: RootJsonFormat[ReaderFeedRequest] = jsonFormat2(ReaderFeedRequest)
 
 
 }

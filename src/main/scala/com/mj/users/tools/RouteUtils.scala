@@ -9,7 +9,7 @@ import com.mj.users.notification.NotificationRoom
 import com.mj.users.route.comment.{GetCommentCountRoute, GetCommentRoute, NewCommentRoute}
 import com.mj.users.route.experience._
 import com.mj.users.route.like.{LikeComment, LikePost, UnlikeComment, UnlikePost}
-import com.mj.users.route.notification.NotificationService
+import com.mj.users.route.notification.{NotificationService, UpdateFeedReaders}
 import com.mj.users.route.post.{GetAllPostRoute, GetFriendsPostRoute, GetMemberIDPostRoute, SharePostRoute}
 import org.joda.time.DateTime
 
@@ -17,7 +17,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute with GetCommentRoute
   with LikePost with UnlikePost with GetAllPostRoute with GetCommentCountRoute with GetMemberIDPostRoute with GetFriendsPostRoute with SharePostRoute
-with LikeComment with UnlikeComment with NotificationService{
+with LikeComment with UnlikeComment with NotificationService with UpdateFeedReaders{
 
 
   /*  createUsersCollection()
@@ -88,7 +88,8 @@ with LikeComment with UnlikeComment with NotificationService{
     val notificationRoom: NotificationRoom = new NotificationRoom(system)
     newPost(system,notificationRoom) ~ updatePost(system) ~ newComment(system,notificationRoom) ~ getComment(system) ~
     likePost(system,notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
-      sharePost(system,notificationRoom) ~ likeComment(system,notificationRoom) ~ unLikeComment(system) ~ notification(system,notificationRoom)
+      sharePost(system,notificationRoom) ~ likeComment(system,notificationRoom) ~ unLikeComment(system) ~ notification(system,notificationRoom) ~
+      updateReader(system)
 
   }
 

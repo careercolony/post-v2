@@ -48,6 +48,8 @@ object Server extends App {
   val sharePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.SharePostProcessor]), "sharePostProcessor")
   val getFriendsPostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.GetFriendsPostProcessor]), "getFriendsPostProcessor")
 
+  val updateReaderProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.UpdateReaderProcessor]), "updateReaderProcessor")
+
 
   import system.dispatcher
 
