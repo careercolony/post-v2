@@ -24,9 +24,6 @@ class NewPostProcessor extends Actor with MessageConfig with KafkaAccess {
 
     case (postRequestDto: PostRequest  , notificationRoom : NotificationRoom) => {
       val origin = sender()
-
-
-
       val result = insertNewPost(postRequestDto).flatMap(postResponse => {
         insertNewPostFeed(postResponse,"Post").flatMap(insertNewPostFeed => {
           notificationRoom.notificationActor !  insertNewPostFeed

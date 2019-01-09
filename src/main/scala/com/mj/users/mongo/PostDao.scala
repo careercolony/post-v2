@@ -1,5 +1,7 @@
 package com.mj.users.mongo
 
+import java.text.SimpleDateFormat
+
 import com.mj.users.directive.Order.{Asc, Desc}
 import com.mj.users.directive.PageRequest
 import com.mj.users.model._
@@ -13,7 +15,7 @@ import scala.concurrent.Future
 
 object PostDao {
 
-
+  val format: SimpleDateFormat = new SimpleDateFormat("yyyy MM dd HH:mm:ss")
   val postCollection: Future[BSONCollection] = db.map(_.collection[BSONCollection]("post"))
 
   val feedCollection: Future[BSONCollection] = db.map(_.collection[BSONCollection]("feed"))
@@ -90,11 +92,12 @@ object PostDao {
 
   //insert user Details
   def insertNewPost(userRequest: PostRequest): Future[Post] = {
+
     for {
       postData <- Future {
         Post(userRequest.memberID,
           BSONObjectID.generate().stringify,
-          "",
+          format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
           userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
           userRequest.author, userRequest.author_avatar, userRequest.author_position,
           userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
@@ -121,7 +124,7 @@ object PostDao {
   def LikePost(userRequest: LikePostRequest): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID), BSONDocument("$addToSet" -> BSONDocument("likes" -> LikeDetails(userRequest.actorID, userRequest.like, ""))))
+      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID), BSONDocument("$addToSet" -> BSONDocument("likes" -> LikeDetails(userRequest.actorID, userRequest.like, format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value))))))
     }
       yield (response)
   }
@@ -155,7 +158,7 @@ object PostDao {
           userRequest.actorName,
           userRequest.postID,
           userRequest.comment_text,
-          "",
+          format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
           userRequest.replies,
           None
         )
@@ -176,6 +179,28 @@ object PostDao {
       document("postID" -> postID))
   }
 
+  def getFeedForComment(userRequest: LikeCommentRequest): Future[Option[Feed]] = {
+    search[Feed](feedCollection,
+      document("commentID" -> userRequest.commentID, "activityType" -> "Comment"))
+  }
+
+  def insertLikeFeedForComment(userRequest: Feed, feedType: String , memberID : String): Future[Feed] = {
+    for {
+      feedData <- Future {
+        Feed(BSONObjectID.generate().stringify, userRequest.memberID,
+          feedType,
+          userRequest.postDetails,
+          Some(memberID),
+          None,
+          None,userRequest.commentID
+        )
+      }
+      response <- insert[Feed](feedCollection, feedData)
+    }
+      yield (response)
+
+
+  }
   //like Comment
   def LikeComment(userRequest: LikeCommentRequest): Future[String] = {
     for {
@@ -225,14 +250,14 @@ object PostDao {
           feedType,
           Post(userRequest.memberID,
             userRequest.postID,
-            "",
+            format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
             userRequest.post_url, userRequest.html, userRequest.readers, None,
             None
           ),
-          None, None, None
+          None, None, None,None
         )
       }
       response <- insert[Feed](feedCollection, feedData)
@@ -242,14 +267,14 @@ object PostDao {
 
   }
 
-  def insertNewCommentFeed(userRequest: CommentRequest, feedType: String): Future[Feed] = {
+  def insertNewCommentFeed(userRequest: CommentRequest, feedType: String , commentResp : Comment): Future[Feed] = {
     for {
       feedData <- Future {
         Feed(BSONObjectID.generate().stringify, userRequest.memberID,
           feedType,
           Post(userRequest.memberID,
             userRequest.postID,
-            "",
+            format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
@@ -258,7 +283,7 @@ object PostDao {
           ),
           Some(userRequest.actorID),
           userRequest.actorName,
-          userRequest.actorAvatar
+          userRequest.actorAvatar,Some(commentResp.commentID)
         )
       }
       response <- insert[Feed](feedCollection, feedData)
@@ -275,7 +300,7 @@ object PostDao {
           feedType,
           Post(userRequest.memberID,
             userRequest.postID,
-            "",
+            format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
@@ -284,7 +309,7 @@ object PostDao {
           ),
           Some(userRequest.actorID),
           userRequest.actorName,
-          userRequest.actorAvatar
+          userRequest.actorAvatar,None
         )
       }
       response <- insert[Feed](feedCollection, feedData)

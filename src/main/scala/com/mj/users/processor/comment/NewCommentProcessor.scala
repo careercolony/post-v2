@@ -23,7 +23,7 @@ class NewCommentProcessor extends Actor with MessageConfig with KafkaAccess {
     case (commentRequestDto: CommentRequest , notificationRoom : NotificationRoom) => {
       val origin = sender()
       val result = insertNewComment(commentRequestDto).flatMap(commentResponse => {
-        insertNewCommentFeed(commentRequestDto, "Comment").flatMap(resp => {
+        insertNewCommentFeed(commentRequestDto, "Comment",commentResponse).flatMap(resp => {
           notificationRoom.notificationActor !  resp
           val script = s"CREATE (s:feeds {memberID:'${commentRequestDto.memberID}', FeedID: '${resp._id}', comment_date: TIMESTAMP()})"
           updateNeo4j(script)

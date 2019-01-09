@@ -88,7 +88,7 @@ with LikeComment with UnlikeComment with NotificationService{
     val notificationRoom: NotificationRoom = new NotificationRoom(system)
     newPost(system,notificationRoom) ~ updatePost(system) ~ newComment(system,notificationRoom) ~ getComment(system) ~
     likePost(system,notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
-      sharePost(system) ~ likeComment(system) ~ unLikeComment(system) ~ notification(system,notificationRoom)
+      sharePost(system,notificationRoom) ~ likeComment(system,notificationRoom) ~ unLikeComment(system) ~ notification(system,notificationRoom)
 
   }
 
