@@ -5,8 +5,6 @@ import com.mj.users.directive.PageRequest
 import com.mj.users.model._
 import com.mj.users.mongo.MongoConnector._
 import com.mj.users.mongo.Neo4jConnector.getNeo4j
-import com.mj.users.mongo.PostDao.retrieveFriendsPosts
-import org.neo4j.driver.v1.{AuthTokens, GraphDatabase, Session}
 import reactivemongo.api.QueryOpts
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson._
@@ -35,8 +33,8 @@ object PostDao {
   def getFeedStore(): Future[List[Feed]] = {
 
     val result = searchAll[Feed](feedCollection,
-      BSONDocument())
-    println("result:"+result)
+      BSONDocument("activityType" -> "Post"))
+    println("result:" + result)
     result
   }
 
@@ -68,31 +66,26 @@ object PostDao {
       }
     })
 
-  result
+    result
   }
 
   def getFriendsUnreadPost(memberID: String): Future[List[Feed]] = {
-   Future{List()}
+    Future {
+      List()
+    }
     getFriends(memberID).flatMap(resp =>
       retrieveFriendsPosts(resp.map(_.memberID), None).mapTo[List[Feed]]
-    )/*_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))*/
+    ) /*_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))*/
 
   }
 
   def retrieveFriendsPosts(listOfMemberId: List[String], pageOpt: Option[PageRequest]): Future[List[Feed]] = {
-    val page : PageRequest = pageOpt.getOrElse(PageRequest.default.copy(sort = Map("postID" -> Desc)))
-    val sort : BSONDocument = getPaginationSort(page)
+    val page: PageRequest = pageOpt.getOrElse(PageRequest.default.copy(sort = Map("postID" -> Desc)))
+    val sort: BSONDocument = getPaginationSort(page)
     val queryOps = QueryOpts(skipN = page.offset, batchSizeN = page.limit, flagsN = 0)
-    /*searchWithPagination[Feed](feedCollection,
-      BSONDocument("memberID" -> BSONDocument("$in" -> listOfMemberId)), queryOps, sort, page.limit)*/
-    println("listOfMemberId:"+listOfMemberId(0).toString.substring(1, listOfMemberId(0).toString.length()-1))
- /*   val friendList : String =if(listOfMemberId.size == 1)
-      "[" + listOfMemberId(0) + "]"
-     else
-      if(listOfMemberId.nonEmpty) "[" + listOfMemberId.map(_.toString).reduce(_+","+_) + "]" else "[]"
-    println("listOfMemberId:"+friendList)*/
-    val selector = BSONDocument("memberID" -> /*BSONDocument("$in" -> listOfMemberId)*/listOfMemberId(0).toString.substring(1, listOfMemberId(0).toString.length()-1))
-    searchAll[Feed](feedCollection,selector)
+    val memberList = listOfMemberId.map(element => element.toString.substring(1, element.toString.length() - 1))
+    searchWithPagination[Feed](feedCollection,
+      BSONDocument("memberID" -> BSONDocument("$in" -> memberList),"activityType" -> "Post"), queryOps, sort, page.limit)
   }
 
   //insert user Details
@@ -137,7 +130,7 @@ object PostDao {
   def UnLikePost(postID: String, memberID: String): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> postID), BSONDocument("$pull" -> BSONDocument("likes" -> BSONDocument("likeID" -> memberID) )))
+      response <- update(postCollection, BSONDocument("postID" -> postID), BSONDocument("$pull" -> BSONDocument("likes" -> BSONDocument("likeID" -> memberID))))
     }
       yield (response)
   }
@@ -205,7 +198,7 @@ object PostDao {
   //update user Details
   def updateNewFeed(userRequest: Post, feedType: String): Future[String] = {
 
-    val selector = BSONDocument("postDetails.postID" -> userRequest.postID,"activityType" -> "Post")
+    val selector = BSONDocument("postDetails.postID" -> userRequest.postID, "activityType" -> "Post")
     val result = for {
 
       response <- update(feedCollection, selector, BSONDocument(
@@ -216,7 +209,7 @@ object PostDao {
 
     result.recover {
       case e: Throwable => {
-        println("msg:"+e.getMessage)
+        println("msg:" + e.getMessage)
         throw new Exception(e.getMessage)
       }
 

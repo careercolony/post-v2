@@ -11,6 +11,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{responseMessage, _}
+import com.mj.users.notification.NotificationRoom
 import org.slf4j.LoggerFactory
 import spray.json._
 
@@ -20,7 +21,7 @@ trait LikePost {
   val likePostUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def likePost(system: ActorSystem): Route = {
+  def likePost(system: ActorSystem ,notificationRoom : NotificationRoom): Route = {
 
     val likePostProcessor = system.actorSelection("/*/likePostProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
@@ -30,7 +31,7 @@ trait LikePost {
         put {
           entity(as[LikePostRequest]) { dto =>
 
-            val userResponse = likePostProcessor ? dto
+            val userResponse = likePostProcessor ? ( dto , notificationRoom)
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {

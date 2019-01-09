@@ -86,8 +86,8 @@ with LikeComment with UnlikeComment with NotificationService{
                  system: ActorSystem,
                  materializer: ActorMaterializer) = {
     val notificationRoom: NotificationRoom = new NotificationRoom(system)
-    newPost(system,notificationRoom) ~ updatePost(system) ~ newComment(system) ~ getComment(system) ~
-    likePost(system) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
+    newPost(system,notificationRoom) ~ updatePost(system) ~ newComment(system,notificationRoom) ~ getComment(system) ~
+    likePost(system,notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
       sharePost(system) ~ likeComment(system) ~ unLikeComment(system) ~ notification(system,notificationRoom)
 
   }

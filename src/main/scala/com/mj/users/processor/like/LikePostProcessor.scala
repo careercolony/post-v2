@@ -8,7 +8,8 @@ import com.mj.users.config.MessageConfig
 import com.mj.users.model.{LikePostRequest, LikePostResponse, responseMessage}
 import com.mj.users.mongo.KafkaAccess
 import com.mj.users.mongo.Neo4jConnector.updateNeo4j
-import com.mj.users.mongo.PostDao.{insertNewLikeFeed, LikePost}
+import com.mj.users.mongo.PostDao.{LikePost, insertNewLikeFeed}
+import com.mj.users.notification.NotificationRoom
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -19,10 +20,11 @@ class LikePostProcessor extends Actor with MessageConfig with KafkaAccess {
 
   def receive = {
 
-    case (likePostRequestDto: LikePostRequest) => {
+    case (likePostRequestDto: LikePostRequest , notificationRoom : NotificationRoom) => {
       val origin = sender()
       val result = LikePost(likePostRequestDto).flatMap(likePostResponse =>
         insertNewLikeFeed(likePostRequestDto, "liked")).map(resp => {
+        notificationRoom.notificationActor !  resp
         val script = s"CREATE (s:feeds {memberID:'${likePostRequestDto.memberID}', FeedID: '${resp._id}', likePost_date: TIMESTAMP()})"
         updateNeo4j(script)
 

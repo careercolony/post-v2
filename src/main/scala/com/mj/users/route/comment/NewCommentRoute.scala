@@ -11,6 +11,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{responseMessage, _}
+import com.mj.users.notification.NotificationRoom
 import org.slf4j.LoggerFactory
 import spray.json._
 
@@ -20,7 +21,7 @@ trait NewCommentRoute {
   val newCommentUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def newComment(system: ActorSystem): Route = {
+  def newComment(system: ActorSystem, notificationRoom : NotificationRoom): Route = {
 
     val newCommentProcessor = system.actorSelection("/*/newCommentProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
@@ -30,7 +31,7 @@ trait NewCommentRoute {
         post {
           entity(as[CommentRequest]) { dto =>
 
-            val userResponse = newCommentProcessor ? dto
+            val userResponse = newCommentProcessor ? (dto, notificationRoom)
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {
