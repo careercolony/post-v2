@@ -77,7 +77,7 @@ object PostDao {
     }
     getFriends(memberID).flatMap(resp =>
       retrieveFriendsPosts(resp.map(_.memberID), None).mapTo[List[Feed]]
-    ) /*_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))*/
+    ).map(_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString)))) /*_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))*/
 
   }
 

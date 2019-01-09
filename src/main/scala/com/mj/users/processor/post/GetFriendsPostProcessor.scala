@@ -35,7 +35,7 @@ class GetFriendsPostProcessor extends Actor with MessageConfig with KafkaAccess 
         }
       }).map(response =>{
         println("memberID:"+response)
-        retrieveFriendsPosts(response.map(_.memberID), pageOpt).mapTo[List[Feed]]
+        retrieveFriendsPosts(response.map(_.memberID), pageOpt).mapTo[List[Feed]].map(_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))))
           .map(/*_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))*/
           response =>{
             println("resp"+response)
