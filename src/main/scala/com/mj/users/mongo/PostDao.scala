@@ -248,7 +248,7 @@ object PostDao {
     val result = for {
 
       response <- update(feedCollection, selector,
-        BSONDocument("$addToSet" -> BSONDocument("readers" -> req.memberID)))
+        BSONDocument("$addToSet" -> BSONDocument("postDetails.readers" -> req.memberID)))
     }
       yield (response)
 
