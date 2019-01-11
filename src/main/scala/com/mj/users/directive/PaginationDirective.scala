@@ -8,7 +8,7 @@ import scala.collection.immutable.Seq
 import scala.util.Try
 
 object DefaultPaginationParams {
-  val default_offset_param: Int = 0
+  val default_offset_param: Int = 1
   val default_limit_param: Int = 10
 }
 
