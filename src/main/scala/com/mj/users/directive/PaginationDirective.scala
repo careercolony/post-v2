@@ -86,7 +86,7 @@ object Order {
 
 case class PageRequest(offset: Int, limit: Int, sort: Map[String, Order])
 
-object PageRequest{
+object PageRequest {
   def default = PageRequest(DefaultPaginationParams.default_offset_param, DefaultPaginationParams.default_limit_param, Map.empty[String, Order])
 }
 

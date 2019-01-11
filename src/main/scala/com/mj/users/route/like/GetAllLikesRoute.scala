@@ -17,7 +17,7 @@ import spray.json._
 
 import scala.util.{Failure, Success}
 
-trait GetAllLikesRoute extends MessageConfig{
+trait GetAllLikesRoute extends MessageConfig {
   val getAllLikesUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
@@ -33,15 +33,15 @@ trait GetAllLikesRoute extends MessageConfig{
           onComplete(userResponse) {
             case Success(resp) =>
               resp match {
-                case Nil  =>
-                  complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`,  responseMessage("", noRecordFound, "").toJson.toString)))
+                case Nil =>
+                  complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", noRecordFound, "").toJson.toString)))
                 case s: List[Post] => {
                   val postLike = s.head.likes
                   if (postLike.isDefined) {
                     val postResponse = postLike.get.map(response => LikePostResponse(s.head.memberID, response.likeID, s.head.postID, response.like, response.like_date))
                     complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, postResponse.toJson.toString)))
-                  }else
-                    complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`,  responseMessage("", noRecordFound, "").toJson.toString)))
+                  } else
+                    complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", noRecordFound, "").toJson.toString)))
                 }
                 case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
               }

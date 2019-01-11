@@ -19,7 +19,5 @@ trait MessageConfig {
   val noRecordFound = conf.getString("errorMessages.noRecordFound")
 
 
-
-
 }
 

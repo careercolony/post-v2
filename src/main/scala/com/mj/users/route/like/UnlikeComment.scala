@@ -28,11 +28,11 @@ trait UnlikeComment {
     pathPrefix("v1") {
       path("unlike-comment" / "commentID" / Segment / "memberID" / Segment) { (commentID: String, memberID: String) =>
         get {
-          val userResponse = unLikeCommentProcessor ? ( commentID, memberID)
+          val userResponse = unLikeCommentProcessor ? (commentID, memberID)
           onComplete(userResponse) {
             case Success(resp) =>
               resp match {
-                case s: responseMessage  => if (s.successmsg.nonEmpty)
+                case s: responseMessage => if (s.successmsg.nonEmpty)
                   complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                 else
                   complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))

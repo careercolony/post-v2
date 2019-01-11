@@ -1,4 +1,4 @@
-package com.mj.users.processor.comment
+package com.mj.users.processor.reply
 
 import java.util.concurrent.TimeUnit
 
@@ -6,24 +6,23 @@ import akka.actor.Actor
 import akka.util.Timeout
 import com.mj.users.config.MessageConfig
 import com.mj.users.model.responseMessage
-import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.getCommentCount
+import com.mj.users.mongo.PostDao.getreply
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GetCommentCountProcessor extends Actor with MessageConfig with KafkaAccess {
+class GetRepliesProcessor extends Actor with MessageConfig {
 
   implicit val timeout = Timeout(500, TimeUnit.SECONDS)
 
 
   def receive = {
 
-    case (postID: String) => {
+    case (commentID: String) => {
       val origin = sender()
-      val result = getCommentCount(postID).map(response =>
+      val result = getreply(commentID).map(response =>
         response match {
-          case List() => origin ! responseMessage(postID, noRecordFound, "")
-          case _ => origin ! responseMessage(postID, "", response.size.toString)
+          case List() => origin ! responseMessage("", noRecordFound, "")
+          case _ => origin ! response
         }
       )
 
@@ -34,4 +33,5 @@ class GetCommentCountProcessor extends Actor with MessageConfig with KafkaAccess
       }
     }
   }
+
 }

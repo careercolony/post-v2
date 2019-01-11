@@ -10,9 +10,10 @@ import akka.http.scaladsl.server.Route
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{responseMessage, _}
+import com.mj.users.mongo.PostDao.getFeedStore
 import org.slf4j.LoggerFactory
 import spray.json._
-import com.mj.users.mongo.PostDao.getFeedStore
+
 import scala.util.{Failure, Success}
 
 trait GetAllPostRoute {

@@ -21,7 +21,7 @@ trait LikeComment {
   val likeCommentUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def likeComment(system: ActorSystem , notificationRoom : NotificationRoom): Route = {
+  def likeComment(system: ActorSystem, notificationRoom: NotificationRoom): Route = {
 
     val likeCommentProcessor = system.actorSelection("/*/likeCommentProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
@@ -31,7 +31,7 @@ trait LikeComment {
         put {
           entity(as[LikeCommentRequest]) { dto =>
 
-            val userResponse = likeCommentProcessor ? ( dto , notificationRoom)
+            val userResponse = likeCommentProcessor ? (dto, notificationRoom)
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {

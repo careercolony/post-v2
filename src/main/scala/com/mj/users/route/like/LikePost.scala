@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes.BadRequest
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, MediaTypes}
-import akka.http.scaladsl.server.Directives.{as, complete, entity, path, post, _}
+import akka.http.scaladsl.server.Directives.{as, complete, entity, path, _}
 import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.util.Timeout
@@ -21,7 +21,7 @@ trait LikePost {
   val likePostUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def likePost(system: ActorSystem ,notificationRoom : NotificationRoom): Route = {
+  def likePost(system: ActorSystem, notificationRoom: NotificationRoom): Route = {
 
     val likePostProcessor = system.actorSelection("/*/likePostProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
@@ -31,7 +31,7 @@ trait LikePost {
         put {
           entity(as[LikePostRequest]) { dto =>
 
-            val userResponse = likePostProcessor ? ( dto , notificationRoom)
+            val userResponse = likePostProcessor ? (dto, notificationRoom)
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {

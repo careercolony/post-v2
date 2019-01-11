@@ -36,6 +36,7 @@ object Server extends App {
   val updatePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.UpdatePostProcessor]), "updatePostProcessor")
   val likePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.LikePostProcessor]), "likePostProcessor")
   val unLikePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.UnlikPostProcessor]), "unLikePostProcessor")
+  val deletePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.DeletePostProcessor]), "deletePostProcessor")
 
 
   val newCommentProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.comment.NewCommentProcessor]), "newCommentProcessor")
@@ -43,6 +44,7 @@ object Server extends App {
   val likeCommentProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.LikeCommentProcessor]), "likeCommentProcessor")
   val unLikeCommentProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.UnlikeCommentProcessor]), "unLikeCommentProcessor")
   val getCommentCountProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.comment.GetCommentCountProcessor]), "getCommentCountProcessor")
+  val deleteCommentProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.comment.DeleteCommentProcessor]), "deleteCommentProcessor")
 
 
   val sharePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.SharePostProcessor]), "sharePostProcessor")
@@ -50,6 +52,8 @@ object Server extends App {
 
   val updateReaderProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.UpdateReaderProcessor]), "updateReaderProcessor")
 
+  val newReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.NewReplyProcessor]), "newReplyProcessor")
+  val getRepliesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.GetRepliesProcessor]), "getRepliesProcessor")
 
   import system.dispatcher
 

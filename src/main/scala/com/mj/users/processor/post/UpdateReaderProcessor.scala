@@ -5,9 +5,9 @@ import java.util.concurrent.TimeUnit
 import akka.actor.Actor
 import akka.util.Timeout
 import com.mj.users.config.MessageConfig
-import com.mj.users.model.{Post, ReaderFeedRequest, responseMessage}
+import com.mj.users.model.{ReaderFeedRequest, responseMessage}
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.{updateReaderFeed, updateNewPost}
+import com.mj.users.mongo.PostDao.updateReaderFeed
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

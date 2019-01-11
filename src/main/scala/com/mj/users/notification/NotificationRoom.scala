@@ -82,8 +82,9 @@ class NotificationRoom(actorSystem: ActorSystem) {
             val backToWebsocket = builder.add(
               Flow[NotificationPost].map {
                 case notification: NotificationPost => {
-                  println("notification:"+notification)
-                  TextMessage(notification.toString)}
+                  println("notification:" + notification)
+                  TextMessage(notification.toString)
+                }
               }
             )
 

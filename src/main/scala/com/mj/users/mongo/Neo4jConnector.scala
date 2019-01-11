@@ -17,7 +17,7 @@ object Neo4jConnector {
 
   def updateNeo4j(script: String): Future[Int] = {
 
-println("here2")
+    println("here2")
     val insertResult = for {
       session <- Future {
         driver.session()

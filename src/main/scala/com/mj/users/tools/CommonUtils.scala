@@ -1,13 +1,8 @@
 package com.mj.users.tools
 
 import java.security.MessageDigest
-import java.util.Calendar
-import java.util.concurrent.TimeUnit
-import java.time.{Instant, ZoneId, ZonedDateTime}
 
 import org.joda.time.DateTime
-import reactivemongo.bson.Macros.Annotations.Key
-import com.mj.users.config.Application.kongExpirationTime
 
 object CommonUtils {
 
@@ -20,7 +15,6 @@ object CommonUtils {
   }
 
 
-
   def sha1(str: String) =
     MessageDigest
       .getInstance("SHA-1")
@@ -31,8 +25,6 @@ object CommonUtils {
   def isEmail(email: String): Boolean = {
     """(?=[^\s]+)(?=(\w+)@([\w\.]+))""".r.findFirstIn(email).isDefined
   }
-
-
 
 
 }

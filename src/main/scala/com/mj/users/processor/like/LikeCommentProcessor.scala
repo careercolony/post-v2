@@ -24,15 +24,11 @@ class LikeCommentProcessor extends Actor with MessageConfig with KafkaAccess {
       val origin = sender()
       val result = LikeComment(likeCommentRequestDto).flatMap(resp =>
         getFeedForComment(likeCommentRequestDto)).flatMap(
-          resp => insertLikeFeedForComment(resp.get, "liked", likeCommentRequestDto.memberID)
-        ).map(response => {
+        resp => insertLikeFeedForComment(resp.get, "liked", likeCommentRequestDto.memberID)
+      ).map(response => {
         notificationRoom.notificationActor ! response
         origin ! LikeCommentResponse(likeCommentRequestDto.memberID, likeCommentRequestDto.commentID, likeCommentRequestDto.like, format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)))
       })
-
-
-
-
 
 
       result.recover {

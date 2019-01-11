@@ -21,7 +21,7 @@ trait NewPostRoute {
   val newPostUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def newPost(system: ActorSystem , notificationRoom : NotificationRoom): Route = {
+  def newPost(system: ActorSystem, notificationRoom: NotificationRoom): Route = {
 
     val newPostProcessor = system.actorSelection("/*/newPostProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
@@ -31,7 +31,7 @@ trait NewPostRoute {
         post {
           entity(as[PostRequest]) { dto =>
 
-            val userResponse = newPostProcessor ? (dto , notificationRoom)
+            val userResponse = newPostProcessor ? (dto, notificationRoom)
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {

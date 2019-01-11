@@ -1,28 +1,25 @@
-package com.mj.users.processor.like
+package com.mj.users.processor.reply
 
 import java.util.concurrent.TimeUnit
 
 import akka.actor.Actor
 import akka.util.Timeout
 import com.mj.users.config.MessageConfig
-import com.mj.users.model.responseMessage
-import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.UnLikePost
+import com.mj.users.model._
+import com.mj.users.mongo.PostDao.insertNewReply
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class UnlikPostProcessor extends Actor with MessageConfig with KafkaAccess {
+class NewReplyProcessor extends Actor with MessageConfig {
 
   implicit val timeout = Timeout(500, TimeUnit.SECONDS)
 
 
   def receive = {
 
-    case (postID: String, memberID: String) => {
+    case (replyRequest: ReplyRequest) => {
       val origin = sender()
-      val result = UnLikePost(postID, memberID).
-        map(resp => origin ! responseMessage(postID, "", updateSuccess))
-
+      val result = insertNewReply(replyRequest).map(resp => origin ! resp)
 
       result.recover {
         case e: Throwable => {

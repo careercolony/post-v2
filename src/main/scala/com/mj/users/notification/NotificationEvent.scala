@@ -20,7 +20,7 @@ object NotificationEvent {
   }
 
   case class NotificationPost(listOfPost: List[Feed]) extends ChatEvent {
-    override def toString: String = if(listOfPost.nonEmpty) "[" + listOfPost.map(_.toString).reduce(_+","+_) + "]" else "[]"
+    override def toString: String = if (listOfPost.nonEmpty) "[" + listOfPost.map(_.toString).reduce(_ + "," + _) + "]" else "[]"
   }
 
   case class ChatMessage(sender: Int, text: String) extends ChatEvent

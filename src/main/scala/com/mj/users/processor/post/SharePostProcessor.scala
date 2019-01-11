@@ -7,7 +7,7 @@ import akka.util.Timeout
 import com.mj.users.config.MessageConfig
 import com.mj.users.model._
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.{updateNewFeed, updateNewSharePost}
+import com.mj.users.mongo.PostDao.updateNewSharePost
 import com.mj.users.notification.NotificationRoom
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,12 +19,12 @@ class SharePostProcessor extends Actor with MessageConfig with KafkaAccess {
 
   def receive = {
 
-    case (postDto: PostShare , notificationRoom : NotificationRoom) => {
+    case (postDto: PostShare, notificationRoom: NotificationRoom) => {
       val origin = sender()
-      val result = updateNewSharePost(postDto).map(postResponse =>{
-       // notificationRoom.notificationActor ! 1
-        origin ! responseMessage(postDto.postID, "", updateSuccess)})
-
+      val result = updateNewSharePost(postDto).map(postResponse => {
+        // notificationRoom.notificationActor ! 1
+        origin ! responseMessage(postDto.postID, "", updateSuccess)
+      })
 
 
       result.recover {

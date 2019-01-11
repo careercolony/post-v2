@@ -3,11 +3,9 @@ package com.mj.users.mongo
 import java.util.concurrent.Executors
 
 import com.mj.users.config.Application._
-
 import play.api.libs.iteratee.Enumerator
 import reactivemongo.api._
 import reactivemongo.api.collections.bson.BSONCollection
-
 import reactivemongo.api.gridfs.Implicits._
 import reactivemongo.api.gridfs.{DefaultFileToSave, GridFS}
 import reactivemongo.bson._
@@ -27,8 +25,8 @@ object MongoConnector {
     * @param record           : T, record is BaseMongoObj
     * @return Future[(id: String, errmsg: String)], inserted id string and errmsg
     */
-  def insert[T]( futureCollection: Future[BSONCollection],record: T)(
-                implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[BSONDocument, T]): Future[T] = {
+  def insert[T](futureCollection: Future[BSONCollection], record: T)(
+    implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[BSONDocument, T]): Future[T] = {
 
     val insertResult = for {
       col <- futureCollection
@@ -54,7 +52,7 @@ object MongoConnector {
     * @return Future[T], return the record, if not found return null
     */
   def search[T](futureCollection: Future[BSONCollection],
-                                   selector: BSONDocument)(implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[
+                selector: BSONDocument)(implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[
     BSONDocument, T]): Future[Option[T]] = {
     val findResult: Future[Option[T]] = for {
       col <- futureCollection
@@ -81,7 +79,7 @@ object MongoConnector {
     * @return Future[T], return the record, if not found return null
     */
   def searchAll[T](futureCollection: Future[BSONCollection],
-                selector: BSONDocument)(implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[
+                   selector: BSONDocument)(implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[
     BSONDocument, T]): Future[List[T]] = {
     val findResult: Future[List[T]] = for {
       col <- futureCollection
@@ -90,7 +88,7 @@ object MongoConnector {
         .cursor[T]()
         .collect(10, Cursor.FailOnError[List[T]]())
     } yield {
-      println("rs:"+rs)
+      println("rs:" + rs)
       rs
     }
 
@@ -110,9 +108,9 @@ object MongoConnector {
     * @return Future[T], return the record, if not found return null
     */
   def searchWithPagination[T](futureCollection: Future[BSONCollection],
-                   selector: BSONDocument,queryOps : QueryOpts,sort : BSONDocument ,limit : Int)(implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[
+                              selector: BSONDocument, queryOps: QueryOpts, sort: BSONDocument, limit: Int)(implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[
     BSONDocument, T]): Future[List[T]] = {
-    println("queryOps:"+queryOps + "page.limit:"+limit)
+    println("queryOps:" + queryOps + "page.limit:" + limit)
     val findResult: Future[List[T]] = for {
       col <- futureCollection
       rs <- col
@@ -122,7 +120,7 @@ object MongoConnector {
         .cursor[T]()
         .collect(limit, Cursor.FailOnError[List[T]]())
     } yield {
-      println("rs"+rs)
+      println("rs" + rs)
       rs
     }
 
@@ -133,6 +131,7 @@ object MongoConnector {
     }
     findResult
   }
+
   /**
     * update in collection
     *
@@ -143,13 +142,13 @@ object MongoConnector {
     * @return Future[UpdateResult], return the update result
     */
   def update(futureCollection: Future[BSONCollection],
-                       selector: BSONDocument,
-                       update: BSONDocument,
-                       multi: Boolean = false ,upsert : Boolean = false): Future[String] = {
+             selector: BSONDocument,
+             update: BSONDocument,
+             multi: Boolean = false, upsert: Boolean = false): Future[String] = {
 
     val updateResult = for {
       col <- futureCollection
-      uwr <- col.update(selector, update, multi = multi,upsert = upsert)
+      uwr <- col.update(selector, update, multi = multi, upsert = upsert)
     } yield {
 
       if (uwr.nModified > 0) "record updated successfully"
@@ -173,9 +172,9 @@ object MongoConnector {
     * @return Future[UpdateResult], return the update result
     */
   def updateDetails[T](futureCollection: Future[BSONCollection],
-             selector: BSONDocument,
-             update: T,
-             multi: Boolean = false ,upsert : Boolean = false)(
+                       selector: BSONDocument,
+                       update: T,
+                       multi: Boolean = false, upsert: Boolean = false)(
                         implicit handler: BSONDocumentReader[T] with BSONDocumentWriter[T] with BSONHandler[BSONDocument, T]): Future[String] = {
 
     val updateResult = for {
@@ -205,11 +204,11 @@ object MongoConnector {
       col <- futureCollection
       wr <- col.remove[BSONDocument](selector, firstMatchOnly = firstMatchOnly)
     } yield {
-      if( wr.writeErrors.map(_.errmsg).mkString.nonEmpty)
+      if (wr.writeErrors.map(_.errmsg).mkString.nonEmpty)
         throw new Exception("Error while removing record in the data store.")
       else if (wr.n > 0) "record removed successfully"
       else
-      throw new Exception("No Records Deleted")
+        throw new Exception("No Records Deleted")
 
     }
     removeResult.recover {

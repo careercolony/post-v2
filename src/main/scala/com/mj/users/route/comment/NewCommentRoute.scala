@@ -21,7 +21,7 @@ trait NewCommentRoute {
   val newCommentUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def newComment(system: ActorSystem, notificationRoom : NotificationRoom): Route = {
+  def newComment(system: ActorSystem, notificationRoom: NotificationRoom): Route = {
 
     val newCommentProcessor = system.actorSelection("/*/newCommentProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)

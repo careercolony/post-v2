@@ -21,7 +21,7 @@ trait SharePostRoute {
   val sharePostUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def sharePost(system: ActorSystem , notificationRoom : NotificationRoom): Route = {
+  def sharePost(system: ActorSystem, notificationRoom: NotificationRoom): Route = {
 
     val sharePostProcessor = system.actorSelection("/*/sharePostProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
@@ -31,7 +31,7 @@ trait SharePostRoute {
         put {
           entity(as[PostShare]) { dto =>
 
-            val userResponse = sharePostProcessor ? ( dto , notificationRoom)
+            val userResponse = sharePostProcessor ? (dto, notificationRoom)
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {

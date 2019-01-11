@@ -10,7 +10,7 @@ import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
-import com.mj.users.model.{responseMessage, _}
+import com.mj.users.model.responseMessage
 import org.slf4j.LoggerFactory
 import spray.json._
 
@@ -28,11 +28,11 @@ trait UnlikePost {
     pathPrefix("v1") {
       path("unlikepost" / "postID" / Segment / "memberID" / Segment) { (postID: String, memberID: String) =>
         get {
-          val userResponse = unLikePostProcessor ? ( postID, memberID)
+          val userResponse = unLikePostProcessor ? (postID, memberID)
           onComplete(userResponse) {
             case Success(resp) =>
               resp match {
-                case s: responseMessage  => if (s.successmsg.nonEmpty)
+                case s: responseMessage => if (s.successmsg.nonEmpty)
                   complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                 else
                   complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))

@@ -30,13 +30,13 @@ trait GetFriendsPostRoute extends PaginationDirectives {
         get {
           withPagination { page =>
 
-            val userResponse = getFriendsPostProcessor ? ( memberID  , Option(page))
+            val userResponse = getFriendsPostProcessor ? (memberID, Option(page))
 
             onComplete(userResponse) {
               case Success(resp) =>
                 resp match {
                   case s: List[Feed] => {
-                    println("s:"+s)
+                    println("s:" + s)
                     complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                   }
                   case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
