@@ -68,13 +68,20 @@ object PostDao {
   }
 
   def getFriendsUnreadPost(memberID: String): Future[List[Feed]] = {
-    Future {
-      List()
-    }
+
     getFriends(memberID).flatMap(resp =>
-      retrieveFriendsPosts(resp.map(_.memberID), None).mapTo[List[Feed]]
+      retrieveFriendsNotifications(resp.map(_.memberID), None).mapTo[List[Feed]]
     ).map(_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString)))) /*_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))*/
 
+  }
+
+  def retrieveFriendsNotifications(listOfMemberId: List[String], pageOpt: Option[PageRequest]): Future[List[Feed]] = {
+    val page: PageRequest = pageOpt.getOrElse(PageRequest.default.copy(sort = Map("postID" -> Desc)))
+    val sort: BSONDocument = getPaginationSort(page)
+    val queryOps = QueryOpts(skipN = page.offset, batchSizeN = page.limit, flagsN = 0)
+    val memberList = listOfMemberId.map(element => element.toString.substring(1, element.toString.length() - 1))
+    searchWithPagination[Feed](feedCollection,
+      BSONDocument("memberID" -> BSONDocument("$in" -> memberList)), queryOps, sort, page.limit)
   }
 
   def retrieveFriendsPosts(listOfMemberId: List[String], pageOpt: Option[PageRequest]): Future[List[Feed]] = {
@@ -353,7 +360,7 @@ object PostDao {
   }
 
   def insertNewReply(userRequest: ReplyRequest): Future[Reply] = {
-println("here")
+
     for {
       replyData <- Future {
         Reply(BSONObjectID.generate().stringify,

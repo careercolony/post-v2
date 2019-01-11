@@ -29,7 +29,7 @@ class NotificationActor extends Actor {
       getFriendsUnreadPost(id).onComplete {
         case Success(posts) =>
           actorRef ! NotificationPost(posts)
-          println(s"Member ID $id connected into web socket!")
+          println(s"Member ID $id connected into web socket!"+posts.size)
         case Failure(error) =>
           println(s"Member ID $id get post failed error: $error")
       }
