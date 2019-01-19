@@ -55,6 +55,8 @@ object Server extends App {
   val newReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.NewReplyProcessor]), "newReplyProcessor")
   val getRepliesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.GetRepliesProcessor]), "getRepliesProcessor")
 
+  val uploadImageProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.upload.UploadImageProcessor]), "uploadImageProcessor")
+
   import system.dispatcher
 
   Http().bindAndHandle(RouteUtils.logRoute, "0.0.0.0", port)
