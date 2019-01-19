@@ -8,6 +8,7 @@ import akka.routing.RoundRobinPool
 import akka.stream.ActorMaterializer
 import com.mj.users.config.Application
 import com.mj.users.config.Application._
+import com.mj.users.processor.upload.UploadVideoProcessor
 import com.mj.users.tools.CommonUtils._
 import com.mj.users.tools.RouteUtils
 import com.typesafe.config.ConfigFactory
@@ -56,6 +57,8 @@ object Server extends App {
   val getRepliesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.GetRepliesProcessor]), "getRepliesProcessor")
 
   val uploadImageProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.upload.UploadImageProcessor]), "uploadImageProcessor")
+  val uploadVideoProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.upload.UploadVideoProcessor]), "uploadVideoProcessor")
+  val uploadAvatarProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.upload.UploadAvatarProcessor]), "uploadAvatarProcessor")
 
   import system.dispatcher
 

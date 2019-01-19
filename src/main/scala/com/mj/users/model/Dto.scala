@@ -82,6 +82,10 @@ case class Reply(replyID: String, commentID: String, actorID: String,
 
 case class UploadImageResponse ( fileName  : String )
 
+case class uploadVideoResponse ( fileName  : String )
+
+case class uploadAvatarResponse ( avatarName : String )
+
 object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val PostRequestFormats: RootJsonFormat[PostRequest] = jsonFormat15(PostRequest)
@@ -101,4 +105,6 @@ object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val replyRequestFormats: RootJsonFormat[ReplyRequest] = jsonFormat5(ReplyRequest)
   implicit val replyResponseFormats: RootJsonFormat[Reply] = jsonFormat7(Reply)
   implicit val uploadImageResponseFormats: RootJsonFormat[UploadImageResponse] = jsonFormat1(UploadImageResponse)
+  implicit val uploadVideoResponseFormats: RootJsonFormat[uploadVideoResponse] = jsonFormat1(uploadVideoResponse)
+  implicit val uploadAvatarResponseFormats: RootJsonFormat[uploadAvatarResponse] = jsonFormat1(uploadAvatarResponse)
 }
