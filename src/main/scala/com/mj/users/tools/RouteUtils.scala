@@ -12,7 +12,7 @@ import com.mj.users.route.like._
 import com.mj.users.route.notification.{NotificationService, UpdateFeedReaders}
 import com.mj.users.route.post._
 import com.mj.users.route.reply.{GetRepliesRoute, NewReplyRoute}
-import com.mj.users.route.upload.{UploadAvatarRoute, UploadImageRoute, UploadVideoRoute}
+import com.mj.users.route.upload.{UploadAvatarRoute, UploadImageRoute, UploadProfileBGRoute, UploadVideoRoute}
 import org.joda.time.DateTime
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -20,7 +20,7 @@ import scala.concurrent.{ExecutionContext, Future}
 object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute with GetCommentRoute
   with LikePost with UnlikePost with GetAllPostRoute with GetCommentCountRoute with GetMemberIDPostRoute with GetFriendsPostRoute with SharePostRoute
   with LikeComment with UnlikeComment with NotificationService with UpdateFeedReaders with DeleteCommentRoute with DeletePostRoute
-  with NewReplyRoute with GetRepliesRoute with GetAllLikesRoute with UploadImageRoute with UploadVideoRoute with UploadAvatarRoute{
+  with NewReplyRoute with GetRepliesRoute with GetAllLikesRoute with UploadImageRoute with UploadVideoRoute with UploadAvatarRoute with UploadProfileBGRoute{
 
 
   /*  createUsersCollection()
@@ -93,7 +93,7 @@ object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute
       likePost(system, notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
       sharePost(system, notificationRoom) ~ likeComment(system, notificationRoom) ~ unLikeComment(system) ~ notification(system, notificationRoom) ~
       updateReader(system) ~ deletePost(system) ~ deleteComment(system) ~ newReply(system) ~ getRepliesRoute(system) ~ getAllLikes(system) ~
-      uploadImage(system, materializer) ~ uploadVideo(system , materializer) ~ uploadAvatar(system , materializer)
+      uploadImage(system, materializer) ~ uploadVideo(system , materializer) ~ uploadAvatar(system , materializer) ~ uploadProfileBG(system , materializer)
 
   }
 
