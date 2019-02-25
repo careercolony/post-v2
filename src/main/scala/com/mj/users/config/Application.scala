@@ -28,6 +28,10 @@ object Application {
   val kongAdminURL = config.getString("kong.admin.url")
   val kongExpirationTime = config.getInt("kong.expiration.time")
 
+  val active: String = config.getString("status.active")
+  val deleted: String = config.getString("status.deleted")
+
+  val version = config.getString("postVersion")
   //Mongo configuration
   val dbName = configMongoDbname
 

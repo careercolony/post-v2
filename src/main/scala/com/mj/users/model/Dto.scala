@@ -13,7 +13,7 @@ case class PostRequest(memberID: String, title: Option[String],
                        post_url: Option[String], html: Option[String],
                        readers: Option[List[String]])
 
-case class Post(memberID: String, postID: String, post_date: String, title: Option[String],
+case class Post(memberID: String, status : String ,postID: String, post_date: String,updated_date : String , title: Option[String],
                 description: Option[String], message: Option[String], post_type: Option[String],
                 author: Option[String], author_avatar: Option[String], author_position: Option[String],
                 author_current_employer: Option[String], thumbnail_url: Option[String],
@@ -34,10 +34,10 @@ case class CommentRequest(memberID: String, postID: String, comment_text: Option
                           replies: Option[List[String]], readers: Option[List[String]])
 
 
-case class Comment(commentID: String, memberID: String,
+case class Comment(commentID: String, status : String ,memberID: String,
                    avatar: Option[String], fullname: Option[String],
                    postID: String, comment_text: Option[String],
-                   comment_date: String, replies: Option[List[String]], likes: Option[List[String]])
+                   comment_date: String,updated_date : String , replies: Option[List[String]], likes: Option[List[String]])
 
 
 case class LikePostRequest(memberID: String, postID: String, like: Option[String],
@@ -80,20 +80,13 @@ case class Reply(replyID: String, commentID: String, actorID: String,
                  reply_text: Option[String],
                  reply_date: String)
 
-case class UploadImageResponse ( fileName  : String )
-
-case class uploadVideoResponse ( fileName  : String )
-
-case class uploadAvatarResponse ( avatarName : String )
-
-case class uploadProfileBGResponse ( profile_background : String )
 
 object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
 
   implicit val PostRequestFormats: RootJsonFormat[PostRequest] = jsonFormat15(PostRequest)
   implicit val likeDetailsFormats: RootJsonFormat[LikeDetails] = jsonFormat3(LikeDetails)
 
-  implicit val PostUpdateRequestFormats: RootJsonFormat[Post] = jsonFormat19(Post)
+  implicit val PostUpdateRequestFormats: RootJsonFormat[Post] = jsonFormat21(Post)
   implicit val errorMessageDtoFormats: RootJsonFormat[responseMessage] = jsonFormat3(responseMessage)
   implicit val commentRequestFormats: RootJsonFormat[CommentRequest] = jsonFormat22(CommentRequest)
   implicit val likePostRequestFormats: RootJsonFormat[LikePostRequest] = jsonFormat21(LikePostRequest)
@@ -101,13 +94,9 @@ object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val likeCommentRequestFormats: RootJsonFormat[LikeCommentRequest] = jsonFormat3(LikeCommentRequest)
   implicit val likeCommentResponseFormats: RootJsonFormat[LikeCommentResponse] = jsonFormat4(LikeCommentResponse)
   implicit val postShareRequestFormats: RootJsonFormat[PostShare] = jsonFormat3(PostShare)
-  implicit val commentFormats: RootJsonFormat[Comment] = jsonFormat9(Comment)
+  implicit val commentFormats: RootJsonFormat[Comment] = jsonFormat11(Comment)
   implicit val feedFormats: RootJsonFormat[Feed] = jsonFormat8(Feed)
   implicit val readerFeedRequestFormats: RootJsonFormat[ReaderFeedRequest] = jsonFormat2(ReaderFeedRequest)
   implicit val replyRequestFormats: RootJsonFormat[ReplyRequest] = jsonFormat5(ReplyRequest)
   implicit val replyResponseFormats: RootJsonFormat[Reply] = jsonFormat7(Reply)
-  implicit val uploadImageResponseFormats: RootJsonFormat[UploadImageResponse] = jsonFormat1(UploadImageResponse)
-  implicit val uploadVideoResponseFormats: RootJsonFormat[uploadVideoResponse] = jsonFormat1(uploadVideoResponse)
-  implicit val uploadAvatarResponseFormats: RootJsonFormat[uploadAvatarResponse] = jsonFormat1(uploadAvatarResponse)
-  implicit val uploadProfileBGResponseFormats: RootJsonFormat[uploadProfileBGResponse] = jsonFormat1(uploadProfileBGResponse)
 }

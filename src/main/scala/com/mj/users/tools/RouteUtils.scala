@@ -2,25 +2,24 @@ package com.mj.users.tools
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, StatusCodes}
+import akka.http.scaladsl.server.Directives.pathPrefix
 import akka.http.scaladsl.server._
 import akka.stream.ActorMaterializer
 import com.mj.users.notification.NotificationRoom
-import com.mj.users.processor.upload.UploadImageProcessor
 import com.mj.users.route.comment.{GetCommentCountRoute, GetCommentRoute, NewCommentRoute}
 import com.mj.users.route.experience._
 import com.mj.users.route.like._
 import com.mj.users.route.notification.{NotificationService, UpdateFeedReaders}
 import com.mj.users.route.post._
 import com.mj.users.route.reply.{GetRepliesRoute, NewReplyRoute}
-import com.mj.users.route.upload.{UploadAvatarRoute, UploadImageRoute, UploadProfileBGRoute, UploadVideoRoute}
 import org.joda.time.DateTime
-
+import com.mj.users.config.Application._
 import scala.concurrent.{ExecutionContext, Future}
 
 object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute with GetCommentRoute
   with LikePost with UnlikePost with GetAllPostRoute with GetCommentCountRoute with GetMemberIDPostRoute with GetFriendsPostRoute with SharePostRoute
   with LikeComment with UnlikeComment with NotificationService with UpdateFeedReaders with DeleteCommentRoute with DeletePostRoute
-  with NewReplyRoute with GetRepliesRoute with GetAllLikesRoute with UploadImageRoute with UploadVideoRoute with UploadAvatarRoute with UploadProfileBGRoute{
+  with NewReplyRoute with GetRepliesRoute with GetAllLikesRoute {
 
 
   /*  createUsersCollection()
@@ -78,7 +77,7 @@ object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute
   def routeRoot(implicit ec: ExecutionContext,
                 system: ActorSystem,
                 materializer: ActorMaterializer) = {
-    routeLogic ~
+    pathPrefix("post" / version) { routeLogic }~
       extractRequest { request =>
         badRequest(request)
       }
@@ -92,8 +91,7 @@ object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute
     newPost(system, notificationRoom) ~ updatePost(system) ~ newComment(system, notificationRoom) ~ getComment(system) ~
       likePost(system, notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
       sharePost(system, notificationRoom) ~ likeComment(system, notificationRoom) ~ unLikeComment(system) ~ notification(system, notificationRoom) ~
-      updateReader(system) ~ deletePost(system) ~ deleteComment(system) ~ newReply(system) ~ getRepliesRoute(system) ~ getAllLikes(system) ~
-      uploadImage(system, materializer) ~ uploadVideo(system , materializer) ~ uploadAvatar(system , materializer) ~ uploadProfileBG(system , materializer)
+      updateReader(system) ~ deletePost(system) ~ deleteComment(system) ~ newReply(system) ~ getRepliesRoute(system) ~ getAllLikes(system)
 
   }
 

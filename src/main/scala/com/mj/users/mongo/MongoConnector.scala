@@ -3,6 +3,7 @@ package com.mj.users.mongo
 import java.util.concurrent.Executors
 
 import com.mj.users.config.Application._
+import org.joda.time.DateTime
 import play.api.libs.iteratee.Enumerator
 import reactivemongo.api._
 import reactivemongo.api.collections.bson.BSONCollection
@@ -200,20 +201,21 @@ object MongoConnector {
     * @return Future[UpdateResult], return the update result
     */
   def remove(futureCollection: Future[BSONCollection], selector: BSONDocument, firstMatchOnly: Boolean = false): Future[String] = {
-    val removeResult = for {
+    val updateData: BSONDocument = BSONDocument ( "$set" -> BSONDocument(
+      "status" -> deleted ,  "updated_date" -> Some(DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"))
+    ))
+    val updateResult = for {
       col <- futureCollection
-      wr <- col.remove[BSONDocument](selector, firstMatchOnly = firstMatchOnly)
+      uwr <- col.update(selector, updateData)
     } yield {
-      if (wr.writeErrors.map(_.errmsg).mkString.nonEmpty)
-        throw new Exception("Error while removing record in the data store.")
-      else if (wr.n > 0) "record removed successfully"
-      else
-        throw new Exception("No Records Deleted")
+
+      if (uwr.nModified > 0) "record updated successfully"
+      else "No records Updated"
 
     }
-    removeResult.recover {
+    updateResult.recover {
       case e: Throwable =>
-        throw new Exception(e.getMessage)
+        throw new Exception("No records Updated")
     }
   }
 

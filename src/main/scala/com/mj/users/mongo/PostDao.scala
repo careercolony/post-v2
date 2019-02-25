@@ -7,10 +7,11 @@ import com.mj.users.directive.PageRequest
 import com.mj.users.model._
 import com.mj.users.mongo.MongoConnector._
 import com.mj.users.mongo.Neo4jConnector.getNeo4j
+import org.joda.time.DateTime
 import reactivemongo.api.QueryOpts
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson._
-
+import com.mj.users.config.Application._
 import scala.concurrent.Future
 
 object PostDao {
@@ -47,7 +48,7 @@ object PostDao {
     val sort: BSONDocument = getPaginationSort(page)
     val queryOps = QueryOpts(skipN = page.offset, batchSizeN = page.limit, flagsN = 0)
     searchWithPagination[Post](postCollection,
-      BSONDocument("memberID" -> memberID), queryOps, sort, page.limit)
+      BSONDocument("memberID" -> memberID, "status" -> active), queryOps, sort, page.limit)
   }
 
 
@@ -98,9 +99,9 @@ object PostDao {
 
     for {
       postData <- Future {
-        Post(userRequest.memberID,
+        Post(userRequest.memberID,active,
           BSONObjectID.generate().stringify,
-          format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
+          DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
           userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
           userRequest.author, userRequest.author_avatar, userRequest.author_position,
           userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
@@ -118,7 +119,7 @@ object PostDao {
   def updateNewPost(userRequest: Post): Future[String] = {
     for {
 
-      response <- updateDetails[Post](postCollection, BSONDocument("postID" -> userRequest.postID), userRequest)
+      response <- updateDetails[Post](postCollection, BSONDocument("postID" -> userRequest.postID), userRequest.copy(updated_date =  DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
     }
       yield (response)
   }
@@ -126,14 +127,15 @@ object PostDao {
   //Get all like for Post
   def getAllLikesStore(postID: String): Future[List[Post]] = {
     searchAll[Post](postCollection,
-      BSONDocument("postID" -> postID))
+      BSONDocument("postID" -> postID, "status" -> active))
   }
 
   //LikePost
   def LikePost(userRequest: LikePostRequest): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID), BSONDocument("$addToSet" -> BSONDocument("likes" -> LikeDetails(userRequest.actorID, userRequest.like, format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value))))))
+      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active), BSONDocument("$addToSet" -> BSONDocument("likes" -> LikeDetails(userRequest.actorID, userRequest.like,
+        DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))))
     }
       yield (response)
   }
@@ -142,7 +144,7 @@ object PostDao {
   def UnLikePost(postID: String, memberID: String): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> postID), BSONDocument("$pull" -> BSONDocument("likes" -> BSONDocument("likeID" -> memberID))))
+      response <- update(postCollection, BSONDocument("postID" -> postID, "status" -> active), BSONDocument("$pull" -> BSONDocument("likes" -> BSONDocument("likeID" -> memberID))))
     }
       yield (response)
   }
@@ -151,7 +153,8 @@ object PostDao {
   def updateNewSharePost(userRequest: PostShare): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID), BSONDocument("$addToSet" -> BSONDocument("shares" -> userRequest.memberID)))
+      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active
+      ), BSONDocument("$addToSet" -> BSONDocument("shares" -> userRequest.memberID)))
     }
       yield (response)
   }
@@ -162,12 +165,14 @@ object PostDao {
     for {
       postData <- Future {
         Comment(BSONObjectID.generate().stringify,
+          active,
           userRequest.memberID,
           userRequest.actorAvatar,
           userRequest.actorName,
           userRequest.postID,
           userRequest.comment_text,
-          format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
+          DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),
+          "",
           userRequest.replies,
           None
         )
@@ -180,13 +185,13 @@ object PostDao {
   //Get Comment
   def getComment(postID: String): Future[List[Comment]] = {
     searchAll[Comment](commentCollection,
-      document("postID" -> postID))
+      document("postID" -> postID, "status" -> active))
   }
 
 
   def getCommentCount(postID: String): Future[List[Comment]] = {
     searchAll[Comment](commentCollection,
-      document("postID" -> postID))
+      document("postID" -> postID, "status" -> active))
   }
 
   def getFeedForComment(userRequest: LikeCommentRequest): Future[Option[Feed]] = {
@@ -242,9 +247,9 @@ object PostDao {
       feedData <- Future {
         Feed(BSONObjectID.generate().stringify, userRequest.memberID,
           feedType,
-          Post(userRequest.memberID,
+          Post(userRequest.memberID,active,
             userRequest.postID,
-            format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
+            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
@@ -266,9 +271,9 @@ object PostDao {
       feedData <- Future {
         Feed(BSONObjectID.generate().stringify, userRequest.memberID,
           feedType,
-          Post(userRequest.memberID,
+          Post(userRequest.memberID,active,
             userRequest.postID,
-            format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
+            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
@@ -293,9 +298,9 @@ object PostDao {
       feedData <- Future {
         Feed(BSONObjectID.generate().stringify, userRequest.memberID,
           feedType,
-          Post(userRequest.memberID,
+          Post(userRequest.memberID,active,
             userRequest.postID,
-            format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)),
+            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
@@ -336,7 +341,7 @@ object PostDao {
   def LikeComment(userRequest: LikeCommentRequest): Future[String] = {
     for {
 
-      response <- update(commentCollection, BSONDocument("commentID" -> userRequest.commentID), BSONDocument("$addToSet" -> BSONDocument("likes" -> userRequest.memberID)))
+      response <- update(commentCollection, BSONDocument("commentID" -> userRequest.commentID, "status" -> active), BSONDocument("$addToSet" -> BSONDocument("likes" -> userRequest.memberID)))
     }
       yield (response)
   }
@@ -345,7 +350,7 @@ object PostDao {
   def UnLikeComment(commentID: String, memberID: String): Future[String] = {
     for {
 
-      response <- update(commentCollection, BSONDocument("commentID" -> commentID), BSONDocument("$pull" -> BSONDocument("likes" -> memberID)))
+      response <- update(commentCollection, BSONDocument("commentID" -> commentID, "status" -> active), BSONDocument("$pull" -> BSONDocument("likes" -> memberID)))
     }
       yield (response)
   }
@@ -368,7 +373,7 @@ object PostDao {
           userRequest.actorID,
           userRequest.actorName,
           userRequest.actorAvatar, userRequest.reply_text,
-          format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value))
+          DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")
         )
       }
       response <- insert[Reply](replytCollection, replyData)
