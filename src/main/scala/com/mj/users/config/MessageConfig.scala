@@ -2,6 +2,7 @@ package com.mj.users.config
 
 import com.typesafe.config.ConfigFactory
 
+
 /**
   * Created by rmanas001c on 1/6/2018
   */
