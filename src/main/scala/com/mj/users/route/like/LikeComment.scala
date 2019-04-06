@@ -26,30 +26,30 @@ trait LikeComment {
     val likeCommentProcessor = system.actorSelection("/*/likeCommentProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
-      path("like-comment") {
-        put {
-          entity(as[LikeCommentRequest]) { dto =>
 
-            val userResponse = likeCommentProcessor ? (dto, notificationRoom)
-            onComplete(userResponse) {
-              case Success(resp) =>
-                resp match {
-                  case s: LikeCommentResponse => {
-                    complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                  }
-                  case s: responseMessage =>
-                    complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                  case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+    path("like-comment") {
+      put {
+        entity(as[LikeCommentRequest]) { dto =>
+
+          val userResponse = likeCommentProcessor ? (dto, notificationRoom)
+          onComplete(userResponse) {
+            case Success(resp) =>
+              resp match {
+                case s: LikeCommentResponse => {
+                  complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                 }
-              case Failure(error) =>
-                likeCommentUserLog.error("Error is: " + error.getMessage)
-                complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
-            }
-
+                case s: responseMessage =>
+                  complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+                case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+              }
+            case Failure(error) =>
+              likeCommentUserLog.error("Error is: " + error.getMessage)
+              complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
           }
+
         }
       }
+
     }
   }
 }

@@ -26,9 +26,9 @@ trait NewPostRoute {
     val newPostProcessor = system.actorSelection("/*/newPostProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
       path("new-post") {
         post {
+
           entity(as[PostRequest]) { dto =>
 
             val userResponse = newPostProcessor ? (dto, notificationRoom)
@@ -50,6 +50,6 @@ trait NewPostRoute {
           }
         }
       }
-    }
+
   }
 }

@@ -25,28 +25,28 @@ trait UnlikePost {
     val unLikePostProcessor = system.actorSelection("/*/unLikePostProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
-      path("unlikepost" / "postID" / Segment / "memberID" / Segment) { (postID: String, memberID: String) =>
-        get {
-          val userResponse = unLikePostProcessor ? (postID, memberID)
-          onComplete(userResponse) {
-            case Success(resp) =>
-              resp match {
-                case s: responseMessage => if (s.successmsg.nonEmpty)
-                  complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                else
-                  complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
-              }
-            case Failure(error) =>
-              unLikePostUserLog.error("Error is: " + error.getMessage)
-              complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
-          }
 
+    path("unlikepost" / "postID" / Segment / "memberID" / Segment) { (postID: String, memberID: String) =>
+      get {
+        val userResponse = unLikePostProcessor ? (postID, memberID)
+        onComplete(userResponse) {
+          case Success(resp) =>
+            resp match {
+              case s: responseMessage => if (s.successmsg.nonEmpty)
+                complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+              else
+                complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+              case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+            }
+          case Failure(error) =>
+            unLikePostUserLog.error("Error is: " + error.getMessage)
+            complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
         }
+
       }
     }
-
   }
 
 }
+
+

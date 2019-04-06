@@ -25,31 +25,30 @@ trait GetFriendsPostRoute extends PaginationDirectives {
 
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
     val getFriendsPostProcessor = system.actorSelection("/*/getFriendsPostProcessor")
-    pathPrefix("v1") {
-      path("get-friends-post" / "memberID" / Segment) { memberID =>
-        get {
-          withPagination { page =>
 
-            val userResponse = getFriendsPostProcessor ? (memberID, Option(page))
+    path("get-friends-post" / "memberID" / Segment) { memberID =>
+      get {
+        withPagination { page =>
 
-            onComplete(userResponse) {
-              case Success(resp) =>
-                resp match {
-                  case s: List[Feed] => {
-                    println("s:" + s)
-                    complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                  }
-                  case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+          val userResponse = getFriendsPostProcessor ? (memberID, Option(page))
+
+          onComplete(userResponse) {
+            case Success(resp) =>
+              resp match {
+                case s: List[Feed] => {
+                  println("s:" + s)
+                  complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                 }
-              case Failure(error) =>
-                getFriendsPostUserLog.error("Error is: " + error.getMessage)
-                complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
-            }
+                case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+              }
+            case Failure(error) =>
+              getFriendsPostUserLog.error("Error is: " + error.getMessage)
+              complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
           }
         }
       }
     }
-
   }
 
 }
+

@@ -25,27 +25,27 @@ trait GetCommentCountRoute {
     val GetCommentCountProcessor = system.actorSelection("/*/getCommentCountProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
-      path("get-comments-count" / "postID" / Segment) { postID =>
-        get {
-          val userResponse = GetCommentCountProcessor ? postID
-          onComplete(userResponse) {
-            case Success(resp) =>
-              resp match {
-                case s: responseMessage => if (s.successmsg.nonEmpty)
-                  complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                else
-                  complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
-              }
-            case Failure(error) =>
-              getCommentCountUserLog.error("Error is: " + error.getMessage)
-              complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
-          }
 
+    path("get-comments-count" / "postID" / Segment) { postID =>
+      get {
+        val userResponse = GetCommentCountProcessor ? postID
+        onComplete(userResponse) {
+          case Success(resp) =>
+            resp match {
+              case s: responseMessage => if (s.successmsg.nonEmpty)
+                complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+              else
+                complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+              case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+            }
+          case Failure(error) =>
+            getCommentCountUserLog.error("Error is: " + error.getMessage)
+            complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
         }
+
       }
     }
+
 
   }
 

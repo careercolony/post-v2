@@ -25,28 +25,27 @@ trait NewReplyRoute {
     val newReplyProcessor = system.actorSelection("/*/newReplyProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
-      path("new-reply") {
-        post {
-          entity(as[ReplyRequest]) { dto =>
 
-            val userResponse = newReplyProcessor ? dto
-            onComplete(userResponse) {
-              case Success(resp) =>
-                resp match {
-                  case s: Reply => {
-                    complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                  }
-                  case s: responseMessage =>
-                    complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                  case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+    path("new-reply") {
+      post {
+        entity(as[ReplyRequest]) { dto =>
+
+          val userResponse = newReplyProcessor ? dto
+          onComplete(userResponse) {
+            case Success(resp) =>
+              resp match {
+                case s: Reply => {
+                  complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                 }
-              case Failure(error) =>
-                newReplyUserLog.error("Error is: " + error.getMessage)
-                complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
-            }
-
+                case s: responseMessage =>
+                  complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+                case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+              }
+            case Failure(error) =>
+              newReplyUserLog.error("Error is: " + error.getMessage)
+              complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
           }
+
         }
       }
     }

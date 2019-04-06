@@ -25,28 +25,28 @@ trait GetCommentRoute {
     val getCommentProcessor = system.actorSelection("/*/getCommentProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
-      path("get-comments" / "postID" / Segment) { postID =>
-        get {
-          val userResponse = getCommentProcessor ? postID
-          onComplete(userResponse) {
-            case Success(resp) =>
-              resp match {
-                case s: List[Comment] => {
-                  complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                }
-                case s: responseMessage =>
-                  complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
-              }
-            case Failure(error) =>
-              getCommentUserLog.error("Error is: " + error.getMessage)
-              complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
-          }
 
+    path("get-comments" / "postID" / Segment) { postID =>
+      get {
+        val userResponse = getCommentProcessor ? postID
+        onComplete(userResponse) {
+          case Success(resp) =>
+            resp match {
+              case s: List[Comment] => {
+                complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+              }
+              case s: responseMessage =>
+                complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
+              case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+            }
+          case Failure(error) =>
+            getCommentUserLog.error("Error is: " + error.getMessage)
+            complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
         }
+
       }
     }
+
 
   }
 

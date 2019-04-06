@@ -24,7 +24,7 @@ trait GetAllPostRoute {
 
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
+
       path("get-all-post") {
         get {
           val userResponse = getFeedStore()
@@ -48,4 +48,3 @@ trait GetAllPostRoute {
 
   }
 
-}

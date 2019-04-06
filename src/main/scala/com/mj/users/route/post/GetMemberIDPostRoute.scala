@@ -25,28 +25,27 @@ trait GetMemberIDPostRoute extends Directives with PaginationDirectives {
 
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
-    pathPrefix("v1") {
-      path("get-post" / "memberID" / Segment) { memberID =>
-        get {
-          withPagination { page =>
-            val userResponse = getMemberIDStore(memberID, page)
-            onComplete(userResponse) {
-              case Success(resp) =>
-                resp match {
-                  case s: List[Post] => {
-                    complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                  }
-                  case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+
+    path("get-post" / "memberID" / Segment) { memberID =>
+      get {
+        withPagination { page =>
+          val userResponse = getMemberIDStore(memberID, page)
+          onComplete(userResponse) {
+            case Success(resp) =>
+              resp match {
+                case s: List[Post] => {
+                  complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                 }
-              case Failure(error) =>
-                getMemberIDUserLog.error("Error is: " + error.getMessage)
-                complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
-            }
+                case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
+              }
+            case Failure(error) =>
+              getMemberIDUserLog.error("Error is: " + error.getMessage)
+              complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
           }
         }
       }
     }
-
   }
 
 }
+
