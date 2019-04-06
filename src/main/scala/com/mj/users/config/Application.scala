@@ -31,6 +31,7 @@ object Application {
   val active: String = config.getString("status.active")
   val deleted: String = config.getString("status.deleted")
 
+  
   val version = config.getString("postVersion")
   //Mongo configuration
   val dbName = configMongoDbname
