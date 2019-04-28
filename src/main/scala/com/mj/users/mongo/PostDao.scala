@@ -79,10 +79,10 @@ object PostDao {
   def retrieveFriendsNotifications(listOfMemberId: List[String], pageOpt: Option[PageRequest]): Future[List[Feed]] = {
     val page: PageRequest = pageOpt.getOrElse(PageRequest.default.copy(sort = Map("postID" -> Desc)))
     val sort: BSONDocument = getPaginationSort(page)
-    val queryOps = QueryOpts(skipN = page.offset, batchSizeN = page.limit, flagsN = 0)
+    val queryOps = QueryOpts(skipN = page.offset, batchSizeN = 1000, flagsN = 0)
     val memberList = listOfMemberId.map(element => element.toString.substring(1, element.toString.length() - 1))
     searchWithPagination[Feed](feedCollection,
-      BSONDocument("memberID" -> BSONDocument("$in" -> memberList)), queryOps, sort, page.limit)
+      BSONDocument("memberID" -> BSONDocument("$in" -> memberList)), queryOps, sort, 1000)
   }
 
   def retrieveFriendsPosts(listOfMemberId: List[String], pageOpt: Option[PageRequest]): Future[List[Feed]] = {

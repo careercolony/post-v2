@@ -15,6 +15,7 @@ import com.mj.users.route.reply.{GetRepliesRoute, NewReplyRoute}
 import org.joda.time.DateTime
 import com.mj.users.config.Application._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute with GetCommentRoute
   with LikePost with UnlikePost with GetAllPostRoute with GetCommentCountRoute with GetMemberIDPostRoute with GetFriendsPostRoute with SharePostRoute
@@ -74,20 +75,21 @@ object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute
     }(innerRejectionsHandled)(ctx)
   }
 
-  def routeRoot(implicit ec: ExecutionContext,
+  def routeRoot(notificationRoom: NotificationRoom,
                 system: ActorSystem,
                 materializer: ActorMaterializer) = {
-    pathPrefix("post" / version) { routeLogic }~
+    pathPrefix("post" / version) { routeLogic(notificationRoom,system,materializer) }~
       extractRequest { request =>
         badRequest(request)
       }
   }
 
 
-  def routeLogic(implicit ec: ExecutionContext,
+  def routeLogic( notificationRoom: NotificationRoom,
                  system: ActorSystem,
                  materializer: ActorMaterializer) = {
-    val notificationRoom: NotificationRoom = new NotificationRoom(system)
+    //val notificationRoom: NotificationRoom = new NotificationRoom(system)
+    println("notificationRoom:"+notificationRoom)
     newPost(system, notificationRoom) ~ updatePost(system) ~ newComment(system, notificationRoom) ~ getComment(system) ~
       likePost(system, notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
       sharePost(system, notificationRoom) ~ likeComment(system, notificationRoom) ~ unLikeComment(system) ~ notification(system, notificationRoom) ~
@@ -95,7 +97,7 @@ object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute
 
   }
 
-  def logRoute(implicit ec: ExecutionContext,
+  def logRoute(notificationRoom: NotificationRoom,
                system: ActorSystem,
-               materializer: ActorMaterializer) = logDuration(routeRoot)
+               materializer: ActorMaterializer) = logDuration(routeRoot(notificationRoom,system,materializer))
 }

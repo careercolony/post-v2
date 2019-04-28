@@ -8,7 +8,7 @@ import akka.routing.RoundRobinPool
 import akka.stream.ActorMaterializer
 import com.mj.users.config.Application
 import com.mj.users.config.Application._
-
+import com.mj.users.notification.NotificationRoom
 import com.mj.users.tools.CommonUtils._
 import com.mj.users.tools.RouteUtils
 import com.typesafe.config.ConfigFactory
@@ -57,9 +57,10 @@ object Server extends App {
   val getRepliesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.GetRepliesProcessor]), "getRepliesProcessor")
 
 
+  val notificationRoom: NotificationRoom = new NotificationRoom(system)
   import system.dispatcher
 
-  Http().bindAndHandle(RouteUtils.logRoute, "0.0.0.0", port)
+  Http().bindAndHandle(RouteUtils.logRoute(notificationRoom,system,materializer), "0.0.0.0", port)
 
   consoleLog("INFO",
     s"User server started! Access url: https://$hostName:$port/")
