@@ -5,12 +5,15 @@ import java.util.concurrent.TimeUnit
 import akka.actor.Actor
 import akka.util.Timeout
 import com.mj.users.config.MessageConfig
+import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{LikePostRequest, LikePostResponse, responseMessage}
 import com.mj.users.mongo.KafkaAccess
 import com.mj.users.mongo.Neo4jConnector.updateNeo4j
 import com.mj.users.mongo.PostDao.{LikePost, format, insertNewLikeFeed}
 import com.mj.users.notification.NotificationRoom
 import reactivemongo.bson.BSONDateTime
+import spray.json._
+
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -26,6 +29,7 @@ class LikePostProcessor extends Actor with MessageConfig with KafkaAccess {
       val result = LikePost(likePostRequestDto).flatMap(likePostResponse =>
         insertNewLikeFeed(likePostRequestDto, "liked")).map(resp => {
         notificationRoom.notificationActor ! resp
+        sendPostToKafka(resp.toJson.toString)
         val script = s"CREATE (s:feeds {memberID:'${likePostRequestDto.memberID}', FeedID: '${resp._id}', likePost_date: TIMESTAMP()})"
         updateNeo4j(script)
 

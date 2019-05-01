@@ -154,7 +154,7 @@ object PostDao {
     for {
 
       response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active
-      ), BSONDocument("$addToSet" -> BSONDocument("shares" -> userRequest.memberID)))
+      ), BSONDocument("$addToSet" -> BSONDocument("shares" -> BSONDocument("postID" -> userRequest.postID, "memberID" -> userRequest.memberID, "recipients" -> userRequest.recipients))))
     }
       yield (response)
   }
@@ -286,9 +286,10 @@ object PostDao {
         )
       }
       response <- insert[Feed](feedCollection, feedData)
+      
     }
       yield (response)
-
+      
 
   }
 
@@ -388,3 +389,5 @@ object PostDao {
   }
 
 }
+
+

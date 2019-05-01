@@ -1,0 +1,223 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>directive - com.mj.users.directive</title>
+          <meta name="description" content="directive - com.mj.users.directive" />
+          <meta name="keywords" content="directive com.mj.users.directive" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.mj.users.directive.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.mj">mj</a>.<a href="../package.html" class="extype" name="com.mj.users">users</a></p>
+        <h1>directive</h1><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">directive</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.mj.users.directive.Order" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="OrderextendsAnyRef"></a>
+      <a id="Order:Order"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">sealed </span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Order.html"><span class="name">Order</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package@OrderextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.directive.PageRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PageRequestextendsProductwithSerializable"></a>
+      <a id="PageRequest:PageRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PageRequest.html"><span class="name">PageRequest</span></a><span class="params">(<span name="offset">offset: <span class="extype" name="scala.Int">Int</span></span>, <span name="limit">limit: <span class="extype" name="scala.Int">Int</span></span>, <span name="sort">sort: <span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <a href="Order.html" class="extype" name="com.mj.users.directive.Order">Order</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package@PageRequestextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.directive.PageResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PageResponse[T]extendsProductwithSerializable"></a>
+      <a id="PageResponse[T]:PageResponse[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PageResponse.html"><span class="name">PageResponse</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="elements">elements: <span class="extype" name="scala.collection.immutable.Seq">Seq</span>[<span class="extype" name="com.mj.users.directive.PageResponse.T">T</span>]</span>, <span name="totalElements">totalElements: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package@PageResponse[T]extendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.directive.PaginationDirectives" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="PaginationDirectivesextendsAnyRef"></a>
+      <a id="PaginationDirectives:PaginationDirectives"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="PaginationDirectives.html"><span class="name">PaginationDirectives</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package@PaginationDirectivesextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.mj.users.directive.DefaultPaginationParams" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DefaultPaginationParams"></a>
+      <a id="DefaultPaginationParams:DefaultPaginationParams"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DefaultPaginationParams$.html"><span class="name">DefaultPaginationParams</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package@DefaultPaginationParams" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.directive.Order" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Order"></a>
+      <a id="Order:Order"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Order$.html"><span class="name">Order</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package@Order" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.directive.PageRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PageRequest"></a>
+      <a id="PageRequest:PageRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PageRequest$.html"><span class="name">PageRequest</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.directive.package@PageRequest" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

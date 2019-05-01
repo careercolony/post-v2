@@ -1,0 +1,203 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>post - com.mj.users.processor.post</title>
+          <meta name="description" content="post - com.mj.users.processor.post" />
+          <meta name="keywords" content="post com.mj.users.processor.post" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'com.mj.users.processor.post.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="com">com</a>.<a href="../../../package.html" class="extype" name="com.mj">mj</a>.<a href="../../package.html" class="extype" name="com.mj.users">users</a>.<a href="../package.html" class="extype" name="com.mj.users.processor">processor</a></p>
+        <h1>post</h1><span class="permalink">
+      <a href="../../../../../index.html#com.mj.users.processor.post.package" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">post</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.mj.users.processor.post.DeletePostProcessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DeletePostProcessorextendsActorwithMessageConfig"></a>
+      <a id="DeletePostProcessor:DeletePostProcessor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DeletePostProcessor.html"><span class="name">DeletePostProcessor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="../../config/MessageConfig.html" class="extype" name="com.mj.users.config.MessageConfig">MessageConfig</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.mj.users.processor.post.package@DeletePostProcessorextendsActorwithMessageConfig" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.processor.post.GetFriendsPostProcessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GetFriendsPostProcessorextendsActorwithMessageConfigwithKafkaAccess"></a>
+      <a id="GetFriendsPostProcessor:GetFriendsPostProcessor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="GetFriendsPostProcessor.html"><span class="name">GetFriendsPostProcessor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="../../config/MessageConfig.html" class="extype" name="com.mj.users.config.MessageConfig">MessageConfig</a> with <a href="../../mongo/KafkaAccess.html" class="extype" name="com.mj.users.mongo.KafkaAccess">KafkaAccess</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.mj.users.processor.post.package@GetFriendsPostProcessorextendsActorwithMessageConfigwithKafkaAccess" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.processor.post.NewPostProcessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NewPostProcessorextendsActorwithMessageConfigwithKafkaAccess"></a>
+      <a id="NewPostProcessor:NewPostProcessor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NewPostProcessor.html"><span class="name">NewPostProcessor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="../../config/MessageConfig.html" class="extype" name="com.mj.users.config.MessageConfig">MessageConfig</a> with <a href="../../mongo/KafkaAccess.html" class="extype" name="com.mj.users.mongo.KafkaAccess">KafkaAccess</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.mj.users.processor.post.package@NewPostProcessorextendsActorwithMessageConfigwithKafkaAccess" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.processor.post.SharePostProcessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SharePostProcessorextendsActorwithMessageConfigwithKafkaAccess"></a>
+      <a id="SharePostProcessor:SharePostProcessor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SharePostProcessor.html"><span class="name">SharePostProcessor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="../../config/MessageConfig.html" class="extype" name="com.mj.users.config.MessageConfig">MessageConfig</a> with <a href="../../mongo/KafkaAccess.html" class="extype" name="com.mj.users.mongo.KafkaAccess">KafkaAccess</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.mj.users.processor.post.package@SharePostProcessorextendsActorwithMessageConfigwithKafkaAccess" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.processor.post.UpdatePostProcessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UpdatePostProcessorextendsActorwithMessageConfigwithKafkaAccess"></a>
+      <a id="UpdatePostProcessor:UpdatePostProcessor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="UpdatePostProcessor.html"><span class="name">UpdatePostProcessor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="../../config/MessageConfig.html" class="extype" name="com.mj.users.config.MessageConfig">MessageConfig</a> with <a href="../../mongo/KafkaAccess.html" class="extype" name="com.mj.users.mongo.KafkaAccess">KafkaAccess</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.mj.users.processor.post.package@UpdatePostProcessorextendsActorwithMessageConfigwithKafkaAccess" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.processor.post.UpdateReaderProcessor" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="UpdateReaderProcessorextendsActorwithMessageConfigwithKafkaAccess"></a>
+      <a id="UpdateReaderProcessor:UpdateReaderProcessor"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="UpdateReaderProcessor.html"><span class="name">UpdateReaderProcessor</span></a><span class="result"> extends <span class="extype" name="akka.actor.Actor">Actor</span> with <a href="../../config/MessageConfig.html" class="extype" name="com.mj.users.config.MessageConfig">MessageConfig</a> with <a href="../../mongo/KafkaAccess.html" class="extype" name="com.mj.users.mongo.KafkaAccess">KafkaAccess</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#com.mj.users.processor.post.package@UpdateReaderProcessorextendsActorwithMessageConfigwithKafkaAccess" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

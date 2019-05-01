@@ -8,7 +8,7 @@ import spray.json.{DefaultJsonProtocol, RootJsonFormat}
 case class PostRequest(memberID: String, title: Option[String],
                        description: Option[String], message: Option[String], post_type: Option[String],
                        author: Option[String], author_avatar: Option[String], author_position: Option[String],
-                       author_current_employer: Option[String], thumbnail_url: Option[String],
+                       author_current_employer: Option[String], thumbnail_url: Option[List[String]],
                        provider_name: Option[String], provider_url: Option[String],
                        post_url: Option[String], html: Option[String],
                        readers: Option[List[String]])
@@ -16,7 +16,7 @@ case class PostRequest(memberID: String, title: Option[String],
 case class Post(memberID: String, status : String ,postID: String, post_date: String,updated_date : String , title: Option[String],
                 description: Option[String], message: Option[String], post_type: Option[String],
                 author: Option[String], author_avatar: Option[String], author_position: Option[String],
-                author_current_employer: Option[String], thumbnail_url: Option[String],
+                author_current_employer: Option[String], thumbnail_url: Option[List[String]],
                 provider_name: Option[String], provider_url: Option[String],
                 post_url: Option[String], html: Option[String],
                 readers: Option[List[String]], likes: Option[List[LikeDetails]], Shares: Option[List[String]])
@@ -28,7 +28,7 @@ case class CommentRequest(memberID: String, postID: String, comment_text: Option
                           author_avatar: Option[String], author_position: Option[String],
                           author_current_employer: Option[String], title: Option[String],
                           description: Option[String], message: Option[String], post_type: Option[String],
-                          author: Option[String], thumbnail_url: Option[String],
+                          author: Option[String], thumbnail_url: Option[List[String]],
                           provider_name: Option[String], provider_url: Option[String],
                           post_url: Option[String], html: Option[String], activityType: Option[String],
                           replies: Option[List[String]], readers: Option[List[String]])
@@ -45,7 +45,7 @@ case class LikePostRequest(memberID: String, postID: String, like: Option[String
                            author_avatar: Option[String], author_position: Option[String], author_current_employer: Option[String],
                            title: Option[String],
                            description: Option[String], message: Option[String], post_type: Option[String],
-                           author: Option[String], thumbnail_url: Option[String],
+                           author: Option[String], thumbnail_url: Option[List[String]],
                            provider_name: Option[String], provider_url: Option[String],
                            post_url: Option[String], html: Option[String], activityType: Option[String],
                            readers: Option[List[String]])
@@ -56,6 +56,7 @@ case class LikePostResponse(memberID: String, likeID: String, postID: String, li
 case class ReaderFeedRequest(feedID: String, memberID: String)
 
 case class PostShare(memberID: String, postID: String, recipients: Option[List[String]])
+
 
 
 case class Feed(_id: String, memberID: String, activityType: String, postDetails: Post, actorID: Option[String], actorName: Option[String], actorAvatar: Option[String], commentID: Option[String])

@@ -1,0 +1,393 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>model - com.mj.users.model</title>
+          <meta name="description" content="model - com.mj.users.model" />
+          <meta name="keywords" content="model com.mj.users.model" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../index.html';
+            var hash = 'com.mj.users.model.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../../../lib/package_big.png" />
+        <p id="owner"><a href="../../../package.html" class="extype" name="com">com</a>.<a href="../../package.html" class="extype" name="com.mj">mj</a>.<a href="../package.html" class="extype" name="com.mj.users">users</a></p>
+        <h1>model</h1><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">model</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.mj.users.model.Comment" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CommentextendsProductwithSerializable"></a>
+      <a id="Comment:Comment"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Comment.html"><span class="name">Comment</span></a><span class="params">(<span name="commentID">commentID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="status">status: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="avatar">avatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="fullname">fullname: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="postID">postID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="comment_text">comment_text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="comment_date">comment_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="updated_date">updated_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="replies">replies: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="likes">likes: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@CommentextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.CommentRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CommentRequestextendsProductwithSerializable"></a>
+      <a id="CommentRequest:CommentRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CommentRequest.html"><span class="name">CommentRequest</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="postID">postID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="comment_text">comment_text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actorID">actorID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="actorName">actorName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actorAvatar">actorAvatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_avatar">author_avatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_position">author_position: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_current_employer">author_current_employer: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="title">title: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="description">description: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="message">message: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_type">post_type: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author">author: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="thumbnail_url">thumbnail_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_name">provider_name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_url">provider_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_url">post_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="html">html: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="activityType">activityType: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="replies">replies: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="readers">readers: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@CommentRequestextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.Feed" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FeedextendsProductwithSerializable"></a>
+      <a id="Feed:Feed"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Feed.html"><span class="name">Feed</span></a><span class="params">(<span name="_id">_id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="activityType">activityType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="postDetails">postDetails: <a href="Post.html" class="extype" name="com.mj.users.model.Post">Post</a></span>, <span name="actorID">actorID: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actorName">actorName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actorAvatar">actorAvatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="commentID">commentID: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@FeedextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.GetFriends" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GetFriendsextendsProductwithSerializable"></a>
+      <a id="GetFriends:GetFriends"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="GetFriends.html"><span class="name">GetFriends</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@GetFriendsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.LikeCommentRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LikeCommentRequestextendsProductwithSerializable"></a>
+      <a id="LikeCommentRequest:LikeCommentRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LikeCommentRequest.html"><span class="name">LikeCommentRequest</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="commentID">commentID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="like">like: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@LikeCommentRequestextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.LikeCommentResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LikeCommentResponseextendsProductwithSerializable"></a>
+      <a id="LikeCommentResponse:LikeCommentResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LikeCommentResponse.html"><span class="name">LikeCommentResponse</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="commentID">commentID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="like">like: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="like_date">like_date: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@LikeCommentResponseextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.LikeDetails" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LikeDetailsextendsProductwithSerializable"></a>
+      <a id="LikeDetails:LikeDetails"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LikeDetails.html"><span class="name">LikeDetails</span></a><span class="params">(<span name="likeID">likeID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="like">like: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="like_date">like_date: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@LikeDetailsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.LikePostRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LikePostRequestextendsProductwithSerializable"></a>
+      <a id="LikePostRequest:LikePostRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LikePostRequest.html"><span class="name">LikePostRequest</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="postID">postID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="like">like: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actorID">actorID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="actorName">actorName: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="actorAvatar">actorAvatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_avatar">author_avatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_position">author_position: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_current_employer">author_current_employer: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="title">title: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="description">description: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="message">message: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_type">post_type: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author">author: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="thumbnail_url">thumbnail_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_name">provider_name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_url">provider_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_url">post_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="html">html: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="activityType">activityType: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="readers">readers: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@LikePostRequestextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.LikePostResponse" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LikePostResponseextendsProductwithSerializable"></a>
+      <a id="LikePostResponse:LikePostResponse"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LikePostResponse.html"><span class="name">LikePostResponse</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="likeID">likeID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="postID">postID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="like">like: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="like_date">like_date: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@LikePostResponseextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.Post" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PostextendsProductwithSerializable"></a>
+      <a id="Post:Post"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Post.html"><span class="name">Post</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="status">status: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="postID">postID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="post_date">post_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="updated_date">updated_date: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="title">title: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="description">description: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="message">message: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_type">post_type: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author">author: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_avatar">author_avatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_position">author_position: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_current_employer">author_current_employer: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="thumbnail_url">thumbnail_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_name">provider_name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_url">provider_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_url">post_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="html">html: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="readers">readers: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="likes">likes: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<a href="LikeDetails.html" class="extype" name="com.mj.users.model.LikeDetails">LikeDetails</a>]]</span>, <span name="Shares">Shares: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@PostextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.PostRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PostRequestextendsProductwithSerializable"></a>
+      <a id="PostRequest:PostRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PostRequest.html"><span class="name">PostRequest</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="title">title: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="description">description: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="message">message: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_type">post_type: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author">author: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_avatar">author_avatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_position">author_position: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="author_current_employer">author_current_employer: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="thumbnail_url">thumbnail_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_name">provider_name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="provider_url">provider_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="post_url">post_url: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="html">html: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="readers">readers: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@PostRequestextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.PostShare" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PostShareextendsProductwithSerializable"></a>
+      <a id="PostShare:PostShare"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PostShare.html"><span class="name">PostShare</span></a><span class="params">(<span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="postID">postID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="recipients">recipients: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@PostShareextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.ReaderFeedRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReaderFeedRequestextendsProductwithSerializable"></a>
+      <a id="ReaderFeedRequest:ReaderFeedRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReaderFeedRequest.html"><span class="name">ReaderFeedRequest</span></a><span class="params">(<span name="feedID">feedID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="memberID">memberID: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@ReaderFeedRequestextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.Reply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReplyextendsProductwithSerializable"></a>
+      <a id="Reply:Reply"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Reply.html"><span class="name">Reply</span></a><span class="params">(<span name="replyID">replyID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="commentID">commentID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="actorID">actorID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="actorName">actorName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="actorAvatar">actorAvatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="reply_text">reply_text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="reply_date">reply_date: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@ReplyextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.ReplyRequest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReplyRequestextendsProductwithSerializable"></a>
+      <a id="ReplyRequest:ReplyRequest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReplyRequest.html"><span class="name">ReplyRequest</span></a><span class="params">(<span name="actorID">actorID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="commentID">commentID: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="actorName">actorName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="actorAvatar">actorAvatar: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="reply_text">reply_text: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@ReplyRequestextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.mj.users.model.responseMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="responseMessageextendsProductwithSerializable"></a>
+      <a id="responseMessage:responseMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="responseMessage.html"><span class="name">responseMessage</span></a><span class="params">(<span name="uid">uid: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="errmsg">errmsg: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="successmsg">successmsg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@responseMessageextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.mj.users.model.JsonRepo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="JsonRepo"></a>
+      <a id="JsonRepo:JsonRepo"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="JsonRepo$.html"><span class="name">JsonRepo</span></a><span class="result"> extends <span class="extype" name="spray.json.DefaultJsonProtocol">DefaultJsonProtocol</span> with <span class="extype" name="akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport">SprayJsonSupport</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#com.mj.users.model.package@JsonRepo" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
