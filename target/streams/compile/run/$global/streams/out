@@ -45,7 +45,5 @@
 [0m[[0mdebug[0m] [0m	/Users/carlnjoku/.ivy2/cache/com.typesafe.akka/akka-cluster-tools_2.11/jars/akka-cluster-tools_2.11-2.5.16.jar[0m
 [0m[[0mdebug[0m] [0mWaiting for thread run-main-0 to terminate.[0m
 [0m[[0mdebug[0m] [0m	Thread run-main-0 exited.[0m
-[0m[[0mdebug[0m] [0mWaiting for thread users-cluster-akka.remote.default-remote-dispatcher-7 to terminate.[0m
-[0m[[0mdebug[0m] [0m	Thread users-cluster-akka.remote.default-remote-dispatcher-7 exited.[0m
-[0m[[0mdebug[0m] [0mWaiting for thread users-cluster-akka.actor.default-dispatcher-19 to terminate.[0m
-[0m[[0mdebug[0m] [0m	Thread users-cluster-akka.actor.default-dispatcher-19 exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread users-cluster-akka.actor.default-dispatcher-5 to terminate.[0m
+[0m[[0mdebug[0m] [0m	Thread users-cluster-akka.actor.default-dispatcher-5 exited.[0m

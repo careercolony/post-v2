@@ -21,7 +21,7 @@ case class Post(memberID: String, status : String ,postID: String, post_date: St
                 post_url: Option[String], html: Option[String],
                 readers: Option[List[String]], likes: Option[List[LikeDetails]], Shares: Option[List[String]])
 
-case class LikeDetails(likeID: String, like: Option[String], like_date: String)
+case class LikeDetails(likerID: String, like: Option[String], like_date: String)
 
 case class CommentRequest(memberID: String, postID: String, comment_text: Option[String],
                           actorID: String, actorName: Option[String], actorAvatar: Option[String],
@@ -51,7 +51,7 @@ case class LikePostRequest(memberID: String, postID: String, like: Option[String
                            readers: Option[List[String]])
 
 
-case class LikePostResponse(memberID: String, likeID: String, postID: String, like: Option[String], like_date: String)
+case class LikePostResponse(memberID: String, likerID: String, postID: String, like: Option[String], like_date: String)
 
 case class ReaderFeedRequest(feedID: String, memberID: String)
 
