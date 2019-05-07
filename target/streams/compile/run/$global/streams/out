@@ -1,5 +1,4 @@
 [0m[[0minfo[0m] [0mRunning com.mj.users.Server [0m
-[0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
 [0m[[0mdebug[0m] [0m  Classpath:[0m
 [0m[[0mdebug[0m] [0m	/Users/carlnjoku/scala/clients/careercolonyV2/post-v2/target/scala-2.11/classes[0m
 [0m[[0mdebug[0m] [0m	/Users/carlnjoku/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.8.jar[0m
@@ -43,7 +42,7 @@
 [0m[[0mdebug[0m] [0m	/Users/carlnjoku/.ivy2/cache/io.aeron/aeron-client/jars/aeron-client-1.9.3.jar[0m
 [0m[[0mdebug[0m] [0m	/Users/carlnjoku/.ivy2/cache/org.agrona/agrona/jars/agrona-0.9.18.jar[0m
 [0m[[0mdebug[0m] [0m	/Users/carlnjoku/.ivy2/cache/com.typesafe.akka/akka-cluster-tools_2.11/jars/akka-cluster-tools_2.11-2.5.16.jar[0m
+[0m[[0mdebug[0m] [0mWaiting for threads to exit or System.exit to be called.[0m
 [0m[[0mdebug[0m] [0mWaiting for thread run-main-0 to terminate.[0m
 [0m[[0mdebug[0m] [0m	Thread run-main-0 exited.[0m
-[0m[[0mdebug[0m] [0mWaiting for thread users-cluster-akka.actor.default-dispatcher-5 to terminate.[0m
-[0m[[0mdebug[0m] [0m	Thread users-cluster-akka.actor.default-dispatcher-5 exited.[0m
+[0m[[0mdebug[0m] [0mWaiting for thread users-cluster-akka.actor.default-dispatcher-17 to terminate.[0m
