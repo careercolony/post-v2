@@ -1,13 +1,20 @@
+enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
+enablePlugins(AshScriptPlugin)
+
+packageName in Docker := "careercolony/akka-http-docker-feeds-api"
+dockerBaseImage := "openjdk:jre-alpine"
+
 name := "Post"
-version := "0.0.1-SNAPSHOT"
+
+version := "0.0.1"
 scalaVersion := "2.11.8"
+
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
-val akkaExp = "1.0-RC4" // "2.0.5"
-val akkaHttpV = "10.1.6"
-val akkaV = "2.3.14"
+
 libraryDependencies ++= {
   val akkaV = "2.5.16"
-  val akkaHttpV = "10.1.5"
+  val akkaHttpV = "10.1.6"
   Seq(
     "com.typesafe.akka" %% "akka-actor" % "2.4.0",
     "com.typesafe.akka" %% "akka-http-spray-json-experimental" % "2.0-M1",

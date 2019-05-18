@@ -7,10 +7,10 @@ import com.mj.users.directive.PageRequest
 import com.mj.users.model._
 import com.mj.users.mongo.MongoConnector._
 import com.mj.users.mongo.Neo4jConnector.getNeo4j
-import org.joda.time.DateTime
-import reactivemongo.api.QueryOpts
 import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.bson._
+import reactivemongo.api.QueryOpts
+import org.joda.time.DateTime
 import com.mj.users.config.Application._
 import scala.concurrent.Future
 
@@ -21,6 +21,8 @@ object PostDao {
   val replytCollection: Future[BSONCollection] = db.map(_.collection[BSONCollection]("reply"))
   val feedCollection: Future[BSONCollection] = db.map(_.collection[BSONCollection]("feed"))
   val commentCollection: Future[BSONCollection] = db.map(_.collection[BSONCollection]("comment"))
+  val updateCollection: Future[BSONCollection] = dbcoy.map(_.collection[BSONCollection]("updates"))
+  
 
   implicit def replyWriter = Macros.handler[Reply]
 
@@ -29,8 +31,12 @@ object PostDao {
   implicit def likeDetailsWriter = Macros.handler[LikeDetails]
 
   implicit def postWriter = Macros.handler[Post]
+  implicit def updateWriter = Macros.handler[Update]
+  implicit def jobWriter = Macros.handler[Job]
 
   implicit def feedWriter = Macros.handler[Feed]
+  implicit def feedJobWriter = Macros.handler[FeedJob]
+  
 
   implicit def commentWriter = Macros.handler[Comment]
 
@@ -105,7 +111,7 @@ object PostDao {
           userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
           userRequest.author, userRequest.author_avatar, userRequest.author_position,
           userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
-          userRequest.post_url, userRequest.html, userRequest.readers, None,
+          userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
           None
         )
       }
@@ -114,7 +120,6 @@ object PostDao {
       yield (response)
   }
 
-
   //update user Details
   def updateNewPost(userRequest: Post): Future[String] = {
     for {
@@ -122,6 +127,141 @@ object PostDao {
       response <- updateDetails[Post](postCollection, BSONDocument("postID" -> userRequest.postID), userRequest.copy(updated_date =  DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
     }
       yield (response)
+  }
+
+  //insert user Details
+  def insertNewUpdate(userRequest: UpdateRequest): Future[Update] = {
+    for {
+      updateData <- Future {
+        Update(userRequest.memberID,
+          userRequest.coyID,
+          active,
+          BSONObjectID.generate().stringify,
+          DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
+          userRequest.title,
+          userRequest.description,
+          userRequest.message,
+          userRequest.post_type,
+          userRequest.author,
+          userRequest.author_avatar,
+          userRequest.author_position,
+          userRequest.author_current_employer,
+          userRequest.thumbnail_url,
+          userRequest.provider_name,
+          userRequest.provider_url,
+          userRequest.update_url,
+          userRequest.cover_image,
+          userRequest.readers,
+          None,
+          None
+        )
+      }
+      response <- insert[Update](updateCollection, updateData)
+    }
+      yield (response)
+  }
+
+  //update user Details
+  def editUpdate(userRequest: Update): Future[String] = {
+    for {
+
+      response <- updateDetails[Update](updateCollection, BSONDocument("postID" -> userRequest.postID), userRequest.copy(updated_date =  DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
+    }
+      yield (response)
+  }
+
+  def insertNewUpdateFeed(userRequest: Update, feedType: String): Future[Feed] = {
+    for {
+      feedData <- Future {
+        Feed(BSONObjectID.generate().stringify, userRequest.memberID,
+          feedType,
+          Post(userRequest.memberID,active,
+            userRequest.postID,
+            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
+            userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
+            userRequest.author, userRequest.author_avatar, userRequest.author_position,
+            userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
+            userRequest.update_url, userRequest.cover_image, userRequest.readers, None,
+            None
+          ),
+          None, None, None, None
+        )
+      }
+      response <- insert[Feed](feedCollection, feedData)
+    }
+      yield (response)
+
+
+  }
+
+/**
+  def insertNewJob(userRequest: JobRequest): Future[Job] = {
+    for {
+      jobData <- Future {
+        Job(userRequest.memberID,
+          userRequest.status, userRequest.coyID,userRequest.jobID,
+          userRequest.company_name,
+          userRequest.company_url,
+          userRequest.about_us,
+          userRequest.company_size,
+          userRequest.logo,
+          userRequest.title,
+          userRequest.job_description,
+          userRequest.job_function,
+          userRequest.industry,
+          userRequest.job_location,
+          userRequest.cover_image,
+          userRequest.employment_type,
+          userRequest.level,
+          userRequest.views,
+          BSONObjectID.generate().stringify,""
+        )
+      }
+      response <- insert[Job](updateCollection, jobData)
+    }
+      yield (response)
+  }
+*/
+  def insertNewJobFeed(userRequest: JobRequest): Future[FeedJob] = {
+    for {
+      feedData <- Future {
+        FeedJob(BSONObjectID.generate().stringify, userRequest.memberID,
+          "Job",
+          Job(userRequest.memberID,active,
+            userRequest.coyID, userRequest.jobID,
+            userRequest.company_name, userRequest.company_url, userRequest.about_us, userRequest.company_size, 
+            userRequest.logo, userRequest.title, userRequest.job_description, userRequest.job_function, 
+            userRequest.industry, userRequest.job_location, userRequest.cover_image,
+            userRequest.employment_type, userRequest.level, userRequest.views,
+            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),""
+          ),
+          None, None, None, None
+        )
+      }
+      response <- insert[FeedJob](feedCollection, feedData)
+    }
+      yield (response)
+  }
+  
+  
+  //update user Details
+  def updateUpdateFeed(userRequest: Update, feedType: String): Future[String] = {
+
+    val selector = BSONDocument("postDetails.postID" -> userRequest.postID, "activityType" -> "Update")
+    val result = for {
+
+      response <- update(feedCollection, selector, BSONDocument(
+        "$set" -> BSONDocument("postDetails" -> userRequest)
+      ))
+    }
+      yield (response)
+
+    result.recover {
+      case e: Throwable => {
+        println("msg:" + e.getMessage)
+        throw new Exception(e.getMessage)
+      }
+    }
   }
 
   //Get all like for Post
@@ -253,7 +393,7 @@ object PostDao {
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
-            userRequest.post_url, userRequest.html, userRequest.readers, None,
+            userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
             None
           ),
           None, None, None, None
@@ -277,7 +417,7 @@ object PostDao {
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
-            userRequest.post_url, userRequest.html, userRequest.readers, None,
+            userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
             None
           ),
           Some(userRequest.actorID),
@@ -305,7 +445,7 @@ object PostDao {
             userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
             userRequest.author, userRequest.author_avatar, userRequest.author_position,
             userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
-            userRequest.post_url, userRequest.html, userRequest.readers, None,
+            userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
             None
           ),
           Some(userRequest.actorID),
@@ -387,6 +527,17 @@ object PostDao {
     searchAll[Reply](replytCollection,
       document("commentID" -> commentID))
   }
+
+  def getUpdateDetailsByID(memberID: String, coyID: String): Future[List[Update]] = {
+    searchAll[Update](updateCollection,
+      document("memberID" -> memberID, "coyID" -> coyID, "status" -> active))
+  }
+
+  def getOneUpdateDetails(memberID: String, postID: String): Future[Option[Update]] = {
+    search[Update](updateCollection,
+      document("memberID" -> memberID, "postID" -> postID, "status" -> active))
+  }
+
 
 }
 

@@ -19,6 +19,7 @@ object MongoConnector {
     ExecutionContext.fromExecutor(Executors.newFixedThreadPool(50))
 
   val db = futureConnection.flatMap(_.database(dbName))
+  val dbcoy = futureConnection.flatMap(_.database(coydbName))
 
   //insert single document into collection
   /**

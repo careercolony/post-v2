@@ -17,6 +17,7 @@ object Application {
 
   val configMongo: Config = config.getConfig("mongodb")
   val configMongoDbname: String = configMongo.getString("dbname")
+  val configCompanyDbname: String = configMongo.getString("coydbname")
   var configMongoUri: String = configMongo.getString("uri")
 
   //neo4j config
@@ -35,6 +36,7 @@ object Application {
   val version = config.getString("postVersion")
   //Mongo configuration
   val dbName = configMongoDbname
+  val coydbName = configCompanyDbname
 
   val mongoUri = Application.configMongoUri
   val driver = MongoDriver()
