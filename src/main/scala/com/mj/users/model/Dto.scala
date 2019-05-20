@@ -76,19 +76,19 @@ case class PostShare(memberID: String, postID: String, recipients: Option[List[S
 
 case class JobRequest(memberID:String, status: String, coyID:String, jobID: String, company_name: String, 
               company_url: String, about_us:String, company_size:Int, logo: String, title:String, 
-              job_description:String, job_function: String, industry: String, 
-              job_location:String, cover_image: String, employment_type: String, 
-              level: Option[String], views: Option[List[String]], post_date: String,updated_date : String )
+              job_description:String, job_function:String, industry:String, 
+              job_location:String, cover_image:String, employment_type:String, 
+              level: Option[String])
 
 
-case class Job(memberID:String, status: String, coyID:String, postID: String, company_name: String, 
+case class Job(memberID:String, status: String, coyID:String, postID: String, post_date: String, updated_date : String, company_name: String, 
               company_url: String, about_us:String, company_size:Int, logo: String, title:String, 
               job_description:String, job_function: String, industry: String, 
               job_location:String, cover_image: String, employment_type: String, 
-              level: Option[String], views: Option[List[String]], post_date: String,updated_date : String )
+              level: Option[String], views: Option[List[String]])
 
 case class Feed(_id: String, memberID: String, activityType: String, postDetails: Post, actorID: Option[String], actorName: Option[String], actorAvatar: Option[String], commentID: Option[String])
-case class FeedJob(_id: String, memberID: String, activityType: String, postDetails: Job, actorID: Option[String], actorName: Option[String], actorAvatar: Option[String], jobID: Option[String])
+case class FeedJob(_id: String, memberID: String, activityType: String, postDetails: Job, actorID: Option[String], actorName: Option[String], actorAvatar: Option[String])
 case class FeedUpdate(_id: String, memberID: String, activityType: String, postDetails: Update, actorID: Option[String], actorName: Option[String], actorAvatar: Option[String], commentID: Option[String])
 
 //Response format for all apis
@@ -128,7 +128,7 @@ object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val commentFormats: RootJsonFormat[Comment] = jsonFormat11(Comment)
   implicit val feedFormats: RootJsonFormat[Feed] = jsonFormat8(Feed)
   implicit val feedUpdateFormats: RootJsonFormat[FeedUpdate] = jsonFormat8(FeedUpdate)
-  implicit val feedJobFormats: RootJsonFormat[FeedJob] = jsonFormat8(FeedJob)
+  implicit val feedJobFormats: RootJsonFormat[FeedJob] = jsonFormat7(FeedJob)
   
   implicit val readerFeedRequestFormats: RootJsonFormat[ReaderFeedRequest] = jsonFormat2(ReaderFeedRequest)
   implicit val replyRequestFormats: RootJsonFormat[ReplyRequest] = jsonFormat5(ReplyRequest)
@@ -138,7 +138,7 @@ object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val UpdateResponseDtoFormats: RootJsonFormat[Update] = jsonFormat22(Update)
 
   implicit val jobDtoFormats: RootJsonFormat[Job] = jsonFormat20(Job)
-  implicit val jobRequestDtoFormats: RootJsonFormat[JobRequest] = jsonFormat20(JobRequest)
+  implicit val jobRequestDtoFormats: RootJsonFormat[JobRequest] = jsonFormat17(JobRequest)
   
   
 }

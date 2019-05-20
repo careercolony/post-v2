@@ -62,7 +62,7 @@ object Server extends App {
   val GetOneUpdateProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.GetOneUpdateProcessor]), "getOneUpdateProcessor")
   val GetUpdateByMemberProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.GetUpdateByMemberProcessor]), "getUpdateByMemberProcessor")
   val DeleteUpdateProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.DeleteUpdateProcessor]), "deleteUpdateProcessor")
-  val newJobFeedProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.NewJobFeedProcessor]), "newJobFeedProcessor")
+  val newJobFeedProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.NewJobFeedProcessor]), "newJobFeedProcessor")
   
 
 

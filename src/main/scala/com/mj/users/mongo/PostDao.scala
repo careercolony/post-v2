@@ -217,25 +217,26 @@ object PostDao {
           BSONObjectID.generate().stringify,""
         )
       }
-      response <- insert[Job](updateCollection, jobData)
+      response <- jobData
     }
       yield (response)
   }
 */
   def insertNewJobFeed(userRequest: JobRequest): Future[FeedJob] = {
+    
     for {
       feedData <- Future {
         FeedJob(BSONObjectID.generate().stringify, userRequest.memberID,
-          "Job",
+          "job",
           Job(userRequest.memberID,active,
             userRequest.coyID, userRequest.jobID,
+            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
             userRequest.company_name, userRequest.company_url, userRequest.about_us, userRequest.company_size, 
             userRequest.logo, userRequest.title, userRequest.job_description, userRequest.job_function, 
             userRequest.industry, userRequest.job_location, userRequest.cover_image,
-            userRequest.employment_type, userRequest.level, userRequest.views,
-            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),""
+            userRequest.employment_type, userRequest.level, None
           ),
-          None, None, None, None
+          None, None, None
         )
       }
       response <- insert[FeedJob](feedCollection, feedData)

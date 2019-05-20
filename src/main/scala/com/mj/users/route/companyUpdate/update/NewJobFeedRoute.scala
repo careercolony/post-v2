@@ -1,4 +1,4 @@
-package com.mj.users.route.companyUpdate
+package com.mj.users.route.companyUpdate.update
 
 import java.util.concurrent.TimeUnit
 

@@ -12,7 +12,7 @@ import com.mj.users.route.like._
 import com.mj.users.route.notification.{NotificationService, UpdateFeedReaders}
 import com.mj.users.route.post._
 import com.mj.users.route.companyUpdate.update._
-import com.mj.users.route.companyUpdate.{NewJobFeedRoute}
+//import com.mj.users.route.companyUpdate.{NewJobFeedRoute}
 import com.mj.users.route.reply.{GetRepliesRoute, NewReplyRoute}
 import org.joda.time.DateTime
 import com.mj.users.config.Application._
