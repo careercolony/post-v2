@@ -26,6 +26,11 @@ trait NotificationService {
       println(s"received $memberID")
       handleWebsocketMessages(notificationRoom.webSocketFlowForPost(memberID))
 
+    } ~ path("notification-feed" / "memberID" / Segment / "count") { memberID =>
+      //al notificationRoom: NotificationRoom = new NotificationRoom(system)
+      println(s"received $memberID")
+      handleWebsocketMessages(notificationRoom.webSocketFlowForNofiyFeedCount(memberID))
+
     }
 }
 

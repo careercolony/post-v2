@@ -64,7 +64,9 @@ object Server extends App {
   val DeleteUpdateProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.DeleteUpdateProcessor]), "deleteUpdateProcessor")
   val newJobFeedProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.NewJobFeedProcessor]), "newJobFeedProcessor")
   
-
+  // Notification feeds
+  val getFriendNotifyFeedProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.GetFriendNotifyFeedProcessor]), "getFriendNotifyFeedProcessor")
+  
 
   val notificationRoom: NotificationRoom = new NotificationRoom(system)
   import system.dispatcher

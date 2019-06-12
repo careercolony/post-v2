@@ -9,6 +9,8 @@ object NotificationEvent {
 
   case class UserJoinedForCount(id: String, userActor: ActorRef) extends ChatEvent
 
+  case class UserJoinedForNotfyFeedCount(id: String, userActor: ActorRef) extends ChatEvent
+
   case class UserJoinedForPost(id: String, userActor: ActorRef) extends ChatEvent
 
   case class UserLeft(id: String) extends ChatEvent
@@ -16,6 +18,10 @@ object NotificationEvent {
   case class IncomingMessage(text: String) extends ChatEvent
 
   case class NotificationCount(count: Int) extends ChatEvent {
+    override def toString: String = "{\"count\": " + count.toString + "}"
+  }
+
+  case class NotificationFeedCount(count: Int) extends ChatEvent {
     override def toString: String = "{\"count\": " + count.toString + "}"
   }
 

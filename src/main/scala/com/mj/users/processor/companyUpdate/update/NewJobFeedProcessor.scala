@@ -6,15 +6,14 @@ import akka.actor.Actor
 import akka.util.Timeout
 import com.mj.users.config.MessageConfig
 import com.mj.users.model.JsonRepo._
-import com.mj.users.model.{Job, JobRequest, Update, responseMessage}
+import com.mj.users.model.{JobRequest, responseMessage}
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.{insertNewJobFeed}
+import com.mj.users.mongo.PostDao.{getJob, insertNewJobFeed}
 import com.mj.users.mongo.Neo4jConnector.updateNeo4j
 import com.mj.users.notification.NotificationRoom
 import spray.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-
 
 
 
@@ -27,36 +26,19 @@ def receive = {
 
     case (jobRequestDto: JobRequest, notificationRoom: NotificationRoom) => {
       val origin = sender()
-      
-      val joby = JobRequest(
-        jobRequestDto.memberID,
-        jobRequestDto.status, jobRequestDto.coyID, jobRequestDto.jobID, jobRequestDto.company_name, 
-        jobRequestDto.company_url, jobRequestDto.about_us, jobRequestDto.company_size, jobRequestDto.logo, jobRequestDto.title, 
-        jobRequestDto.job_description,jobRequestDto.job_function, 
-        jobRequestDto.industry, jobRequestDto.job_location, jobRequestDto.cover_image , jobRequestDto.employment_type , jobRequestDto.level
-      )
-     
-      val result = insertNewJobFeed(joby).flatMap(feedResponse => {
+      val result = getJob(jobRequestDto).flatMap(postResponse => {
+        println(postResponse)
+        insertNewJobFeed(postResponse, "Job").flatMap(feedResponse => {
+          println(feedResponse.toJson.toString)
           notificationRoom.notificationActor ! feedResponse
-          //println(feedResponse)
-          //sendPostToKafka(feedResponse.toJson.toString)
-          //println(feedResponse.toJson.toString)
-          val script = s"CREATE (s:feeds {memberID:'${jobRequestDto.memberID}', FeedID: '${feedResponse._id}', post_date: TIMESTAMP()})"
+          sendPostToKafka(feedResponse.toJson.toString)
+          val script = s"CREATE (s:feeds {memberID:'${jobRequestDto.memberID}',  FeedID: '${feedResponse._id}', post_date: TIMESTAMP()}) "
           updateNeo4j(script)
-          
-        }).map(resp => origin ! joby)
-            //println("postResponse:"+postResponse.toJson.toString)
-          //sendPostToKafka(postResponse.toJson.toString)
-
-      /**
-      val result = insertNewJobFeed(jobRequestDto, "Job").map(response => {
-        println(response)
-       
-        origin ! jobRequestDto
+        }).map(resp => {
+            
+        }).map(resp => origin ! jobRequestDto)
       })
-
-      */
-
+    
       result.recover {
         case e: Throwable => {
           origin ! responseMessage("", e.getMessage, "")
@@ -127,3 +109,4 @@ def receive = {
   }
 */
 }
+

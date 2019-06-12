@@ -82,6 +82,8 @@ object PostDao {
 
   }
 
+  
+
   def retrieveFriendsNotifications(listOfMemberId: List[String], pageOpt: Option[PageRequest]): Future[List[Feed]] = {
     val page: PageRequest = pageOpt.getOrElse(PageRequest.default.copy(sort = Map("postID" -> Desc)))
     val sort: BSONDocument = getPaginationSort(page)
@@ -194,42 +196,31 @@ object PostDao {
 
   }
 
-/**
-  def insertNewJob(userRequest: JobRequest): Future[Job] = {
+
+  def getJob(jobRequestDto: JobRequest): Future[Job] = {
     for {
       jobData <- Future {
-        Job(userRequest.memberID,
-          userRequest.status, userRequest.coyID,userRequest.jobID,
-          userRequest.company_name,
-          userRequest.company_url,
-          userRequest.about_us,
-          userRequest.company_size,
-          userRequest.logo,
-          userRequest.title,
-          userRequest.job_description,
-          userRequest.job_function,
-          userRequest.industry,
-          userRequest.job_location,
-          userRequest.cover_image,
-          userRequest.employment_type,
-          userRequest.level,
-          userRequest.views,
-          BSONObjectID.generate().stringify,""
+        Job(
+          jobRequestDto.memberID, 
+          jobRequestDto.status, jobRequestDto.coyID, jobRequestDto.jobID, jobRequestDto.post_date,jobRequestDto.updated_date,
+          jobRequestDto.company_name, jobRequestDto.company_url, jobRequestDto.about_us, jobRequestDto.company_size, 
+          jobRequestDto.logo, jobRequestDto.title, jobRequestDto.job_description,jobRequestDto.job_function, 
+          jobRequestDto.industry, jobRequestDto.job_location, jobRequestDto.cover_image, jobRequestDto.employment_type, jobRequestDto.level, None
         )
       }
-      response <- jobData
+    
     }
-      yield (response)
+      yield(jobData)
   }
-*/
-  def insertNewJobFeed(userRequest: JobRequest): Future[FeedJob] = {
+
+  def insertNewJobFeed(userRequest: Job, feedType: String): Future[FeedJob] = {
     
     for {
       feedData <- Future {
         FeedJob(BSONObjectID.generate().stringify, userRequest.memberID,
-          "job",
+          feedType,
           Job(userRequest.memberID,active,
-            userRequest.coyID, userRequest.jobID,
+            userRequest.coyID, userRequest.postID,
             DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
             userRequest.company_name, userRequest.company_url, userRequest.about_us, userRequest.company_size, 
             userRequest.logo, userRequest.title, userRequest.job_description, userRequest.job_function, 

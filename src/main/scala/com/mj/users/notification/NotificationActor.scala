@@ -12,6 +12,9 @@ class NotificationActor extends Actor {
 
   var wsCount: Map[String, ActorRef] = Map.empty[String, ActorRef]
   var wsPost: Map[String, ActorRef] = Map.empty[String, ActorRef]
+  var wsNotifyFeedCount: Map[String, ActorRef] = Map.empty[String, ActorRef]
+  
+
 
   override def receive: Receive = {
     case UserJoinedForCount(id, actorRef) =>
@@ -42,14 +45,25 @@ class NotificationActor extends Actor {
     case getPost: Feed => {
       getFriends(getPost.memberID).map(friends => {
         friends.foreach(frd => {
+          println("YYYYYYYYYYYY"+frd)
           val memberID = frd.memberID.substring(1, frd.memberID.length() - 1)
           wsCount.get(memberID).foreach(_ ! NotificationCount(1))
           wsPost.get(memberID).foreach(_ ! NotificationPost(List(getPost)))
         })
-      }
-      )
+      })
     }
-
+    /**
+    case getPostNotify: Feed => {
+      getFriends(getPost.memberID).map(friends => {
+        friends.foreach(frd => {
+          val memberID = frd.memberID.substring(1, frd.memberID.length() - 1)
+          wsCount.get(memberID).foreach(_ ! NotificationCount(1))
+          wsNotifyFeedCount.get(memberID).foreach(_ ! NotificationFeedCount(1))
+          wsPost.get(memberID).foreach(_ ! NotificationPost(List(getPost)))
+        })
+      })
+    }
+    */
 
   }
 

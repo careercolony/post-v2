@@ -14,7 +14,7 @@ import com.mj.users.mongo.PostDao.retrieveFriendsPosts
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class GetFriendsPostProcessor extends Actor with MessageConfig with KafkaAccess {
+class GetFriendNotifyFeedProcessor extends Actor with MessageConfig with KafkaAccess {
 
   implicit val timeout = Timeout(500, TimeUnit.SECONDS)
 
@@ -35,7 +35,7 @@ class GetFriendsPostProcessor extends Actor with MessageConfig with KafkaAccess 
         }
       }).map(response => {
         println("memberID:" + response)
-        retrieveFriendsPosts(response.map(_.memberID), pageOpt).mapTo[List[Feed]].map(_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))))
+        retrieveFriendsPosts(response.map(_.memberID), pageOpt).mapTo[List[Feed]]
           .map(/**_.filterNot(_.postDetails.readers.exists(_.contains(memberID.toString))*/
             response => {
               println("resp" + response)

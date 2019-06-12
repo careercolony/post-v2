@@ -12,7 +12,7 @@ import com.mj.users.route.like._
 import com.mj.users.route.notification.{NotificationService, UpdateFeedReaders}
 import com.mj.users.route.post._
 import com.mj.users.route.companyUpdate.update._
-//import com.mj.users.route.companyUpdate.{NewJobFeedRoute}
+import com.mj.users.route.companyUpdate.update.{NewJobFeedRoute}
 import com.mj.users.route.reply.{GetRepliesRoute, NewReplyRoute}
 import org.joda.time.DateTime
 import com.mj.users.config.Application._
@@ -21,7 +21,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute with GetCommentRoute
   with NewUpdateRoute with EditUpdateRoute with GetOneUpdateRoute with GetUpdateByMemberRoute with DeleteUpdateRoute with LikePost with UnlikePost with GetAllPostRoute 
-  with NewJobFeedRoute with GetCommentCountRoute with GetMemberIDPostRoute with GetFriendsPostRoute with SharePostRoute
+  with NewJobFeedRoute with GetCommentCountRoute with GetMemberIDPostRoute with GetFriendsPostRoute with GetFriendsNotifyFeedRoute with SharePostRoute
   with LikeComment with UnlikeComment with NotificationService with UpdateFeedReaders 
   with DeleteCommentRoute with DeletePostRoute
   with NewReplyRoute with GetRepliesRoute with GetAllLikesRoute {
@@ -95,7 +95,7 @@ object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute
     //val notificationRoom: NotificationRoom = new NotificationRoom(system)
     println("notificationRoom:"+notificationRoom)
     newPost(system, notificationRoom) ~ updatePost(system) ~ newComment(system, notificationRoom) ~ getComment(system) ~
-      newUpdate(system,notificationRoom) ~ editUpdate(system) ~ getOneUpdate(system) ~ getUpdateByMember(system) ~ deleteUpdate(system) ~ likePost(system, notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
+      getFriendsNotifyFeeds(system) ~ newUpdate(system,notificationRoom) ~ editUpdate(system) ~ getOneUpdate(system) ~ getUpdateByMember(system) ~ deleteUpdate(system) ~ likePost(system, notificationRoom) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
       newJobFeed(system,notificationRoom) ~ sharePost(system, notificationRoom) ~ likeComment(system, notificationRoom) ~ unLikeComment(system) ~ notification(system, notificationRoom) ~
       updateReader(system) ~ deletePost(system) ~ deleteComment(system) ~ newReply(system) ~ getRepliesRoute(system) ~ getAllLikes(system)
 
