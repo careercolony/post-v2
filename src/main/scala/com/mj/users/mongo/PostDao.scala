@@ -29,9 +29,10 @@ object PostDao {
   implicit def PostRequestWriter = Macros.handler[PostRequest]
 
   implicit def likeDetailsWriter = Macros.handler[LikeDetails]
+  implicit def shareDetailsWriter = Macros.handler[ShareDetails]
 
   implicit def postWriter = Macros.handler[Post]
-  implicit def updateWriter = Macros.handler[Update]
+ 
   implicit def jobWriter = Macros.handler[Job]
 
   implicit def feedWriter = Macros.handler[Feed]
@@ -99,7 +100,15 @@ object PostDao {
     val queryOps = QueryOpts(skipN = page.offset, batchSizeN = page.limit, flagsN = 0)
     val memberList = listOfMemberId.map(element => element.toString.substring(1, element.toString.length() - 1))
     searchWithPagination[Feed](feedCollection,
-      BSONDocument("memberID" -> BSONDocument("$in" -> memberList), "activityType" -> "Post"), queryOps, sort, page.limit)
+      BSONDocument("memberID" -> BSONDocument("$in" -> memberList), BSONDocument("activityType" -> BSONDocument("$in" -> BSONArray("Post", "Comment", "liked", "Job"))) ), queryOps, sort, page.limit)
+  }
+
+  private def getPaginationSort(page: PageRequest) = {
+    val sort: BSONDocument = BSONDocument(page.sort.map {
+      case (k, Asc) => (k, BSONInteger(1))
+      case (k, Desc) => (k, BSONInteger(-1))
+    })
+    sort
   }
 
   //insert user Details
@@ -107,12 +116,12 @@ object PostDao {
 
     for {
       postData <- Future {
-        Post(userRequest.memberID,active,
+        Post(userRequest.memberID,userRequest.coyID,active,
           BSONObjectID.generate().stringify,
           DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
-          userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
-          userRequest.author, userRequest.author_avatar, userRequest.author_position,
-          userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
+          userRequest.title, userRequest.post_body, userRequest.message, userRequest.post_type,
+          userRequest.author, userRequest.author_avatar, userRequest.headline,
+          userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
           userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
           None
         )
@@ -131,73 +140,11 @@ object PostDao {
       yield (response)
   }
 
-  //insert user Details
-  def insertNewUpdate(userRequest: UpdateRequest): Future[Update] = {
-    for {
-      updateData <- Future {
-        Update(userRequest.memberID,
-          userRequest.coyID,
-          active,
-          BSONObjectID.generate().stringify,
-          DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
-          userRequest.title,
-          userRequest.description,
-          userRequest.message,
-          userRequest.post_type,
-          userRequest.author,
-          userRequest.author_avatar,
-          userRequest.author_position,
-          userRequest.author_current_employer,
-          userRequest.thumbnail_url,
-          userRequest.provider_name,
-          userRequest.provider_url,
-          userRequest.update_url,
-          userRequest.cover_image,
-          userRequest.readers,
-          None,
-          None
-        )
-      }
-      response <- insert[Update](updateCollection, updateData)
-    }
-      yield (response)
-  }
 
-  //update user Details
-  def editUpdate(userRequest: Update): Future[String] = {
-    for {
-
-      response <- updateDetails[Update](updateCollection, BSONDocument("postID" -> userRequest.postID), userRequest.copy(updated_date =  DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
-    }
-      yield (response)
-  }
-
-  def insertNewUpdateFeed(userRequest: Update, feedType: String): Future[Feed] = {
-    for {
-      feedData <- Future {
-        Feed(BSONObjectID.generate().stringify, userRequest.memberID,
-          feedType,
-          Post(userRequest.memberID,active,
-            userRequest.postID,
-            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
-            userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
-            userRequest.author, userRequest.author_avatar, userRequest.author_position,
-            userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
-            userRequest.update_url, userRequest.cover_image, userRequest.readers, None,
-            None
-          ),
-          None, None, None, None
-        )
-      }
-      response <- insert[Feed](feedCollection, feedData)
-    }
-      yield (response)
+  
 
 
-  }
-
-
-  def getJob(jobRequestDto: JobRequest): Future[Job] = {
+  def getJobFromCompany(jobRequestDto: JobRequest): Future[Job] = {
     for {
       jobData <- Future {
         Job(
@@ -212,6 +159,8 @@ object PostDao {
     }
       yield(jobData)
   }
+
+  
 
   def insertNewJobFeed(userRequest: Job, feedType: String): Future[FeedJob] = {
     
@@ -236,25 +185,7 @@ object PostDao {
   }
   
   
-  //update user Details
-  def updateUpdateFeed(userRequest: Update, feedType: String): Future[String] = {
-
-    val selector = BSONDocument("postDetails.postID" -> userRequest.postID, "activityType" -> "Update")
-    val result = for {
-
-      response <- update(feedCollection, selector, BSONDocument(
-        "$set" -> BSONDocument("postDetails" -> userRequest)
-      ))
-    }
-      yield (response)
-
-    result.recover {
-      case e: Throwable => {
-        println("msg:" + e.getMessage)
-        throw new Exception(e.getMessage)
-      }
-    }
-  }
+  
 
   //Get all like for Post
   def getAllLikesStore(postID: String): Future[List[Post]] = {
@@ -266,30 +197,61 @@ object PostDao {
   def LikePost(userRequest: LikePostRequest): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active), BSONDocument("$addToSet" -> BSONDocument("likes" -> LikeDetails(userRequest.actorID, userRequest.like,
+      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active), 
+        BSONDocument("$addToSet" -> BSONDocument("likes" -> 
+        LikeDetails(userRequest.actorID, userRequest.actorHeadline, userRequest.actorAvatar, 
+        userRequest.actorName,   userRequest.like,
         DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))))
     }
       yield (response)
   }
 
+  // Increase post like counts by 1
+  def incrementLikeCount(like: LikePostRequest) = {
+
+    val selector = BSONDocument("postID" -> like.postID)
+    val result = for {
+
+      response <- update(postCollection, selector, BSONDocument("$inc" -> BSONDocument("count.like" -> 1)))
+    }
+    yield("")
+  }
+
+
+
   //UnLikePost
   def UnLikePost(postID: String, memberID: String): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> postID, "status" -> active), BSONDocument("$pull" -> BSONDocument("likes" -> BSONDocument("likeID" -> memberID))))
+      response <- update(postCollection, BSONDocument("postID" -> postID, "status" -> active), BSONDocument("$pull" -> BSONDocument("likes" -> BSONDocument("likerID" -> memberID))))
     }
       yield (response)
   }
+// decrease post like counts by 1
+  def decrementCommentCount(postID: String) = {
 
+    val selector = BSONDocument("postID" -> postID)
+    val result = for {
+
+      response <- update(postCollection, selector, BSONDocument("$inc" -> BSONDocument("count.like" -> -1)))
+    }
+    yield("")
+  }
 
   def updateNewSharePost(userRequest: PostShare): Future[String] = {
     for {
 
-      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active
-      ), BSONDocument("$addToSet" -> BSONDocument("shares" -> BSONDocument("postID" -> userRequest.postID, "memberID" -> userRequest.memberID, "recipients" -> userRequest.recipients))))
+      //response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active
+      //), BSONDocument("$addToSet" -> BSONDocument("shares" -> BSONDocument("postID" -> userRequest.postID, "actorID" -> userRequest.actorID, "recipients" -> userRequest.recipients))))
+      response <- update(postCollection, BSONDocument("postID" -> userRequest.postID, "status" -> active), 
+        BSONDocument("$addToSet" -> BSONDocument("shares" -> 
+        ShareDetails(userRequest.actorID, userRequest.actorHeadline, userRequest.actorAvatar, 
+        userRequest.actorName,
+        DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))))
     }
       yield (response)
   }
+
 
 
   //insert comment
@@ -301,11 +263,11 @@ object PostDao {
           userRequest.memberID,
           userRequest.actorAvatar,
           userRequest.actorName,
+          userRequest.actorHeadline,
           userRequest.postID,
           userRequest.comment_text,
           DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),
           "",
-          userRequest.replies,
           None
         )
       }
@@ -314,11 +276,30 @@ object PostDao {
       yield (response)
   }
 
+  def incrementCommentCount(commentResp: Comment) = {
+
+    val selector = BSONDocument("postID" -> commentResp.postID)
+    val result = for {
+
+      response <- update(postCollection, selector, BSONDocument("$inc" -> BSONDocument("count.comment" -> 1)))
+    }
+    yield("")
+  }
+
+
+
   //Get Comment
   def getComment(postID: String): Future[List[Comment]] = {
     searchAll[Comment](commentCollection,
       document("postID" -> postID, "status" -> active))
   }
+
+  //Get Activities
+  def getActivities(memberID: String): Future[List[Feed]] = {
+    searchAll[Feed](feedCollection,
+      document("memberID" -> memberID))
+  }
+
 
 
   def getCommentCount(postID: String): Future[List[Comment]] = {
@@ -326,10 +307,9 @@ object PostDao {
       document("postID" -> postID, "status" -> active))
   }
 
-  def getFeedForComment(userRequest: LikeCommentRequest): Future[Option[Feed]] = {
-    search[Feed](feedCollection,
-      document("commentID" -> userRequest.commentID, "activityType" -> "Comment"))
-  }
+  
+
+  
 
 
   //update user Details
@@ -377,18 +357,18 @@ object PostDao {
   def insertNewPostFeed(userRequest: Post, feedType: String): Future[Feed] = {
     for {
       feedData <- Future {
-        Feed(BSONObjectID.generate().stringify, userRequest.memberID,
+        Feed(BSONObjectID.generate().stringify, userRequest.memberID,userRequest.coyID,
           feedType,
-          Post(userRequest.memberID,active,
+          Post(userRequest.memberID,None,active,
             userRequest.postID,
             DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
-            userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
-            userRequest.author, userRequest.author_avatar, userRequest.author_position,
-            userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
+            userRequest.title, userRequest.post_body, userRequest.message, userRequest.post_type,
+            userRequest.author, userRequest.author_avatar, userRequest.headline,
+            userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
             userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
             None
           ),
-          None, None, None, None
+          None, None, None, None, None
         )
       }
       response <- insert[Feed](feedCollection, feedData)
@@ -398,20 +378,52 @@ object PostDao {
 
   }
 
+
   def insertNewCommentFeed(userRequest: CommentRequest, feedType: String, commentResp: Comment): Future[Feed] = {
     for {
       feedData <- Future {
-        Feed(BSONObjectID.generate().stringify, userRequest.memberID,
+        Feed(BSONObjectID.generate().stringify, userRequest.actorID,userRequest.coyID,
           feedType,
-          Post(userRequest.memberID,active,
+          Post(userRequest.memberID,None,active,
             userRequest.postID,
             DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
-            userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
-            userRequest.author, userRequest.author_avatar, userRequest.author_position,
-            userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
+            userRequest.title, userRequest.post_body, userRequest.message, userRequest.post_type,
+            userRequest.author, userRequest.author_avatar, userRequest.headline,
+            userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
             userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
             None
           ),
+          Some(userRequest.actorID),
+          userRequest.actorName,
+          userRequest.actorHeadline,
+          userRequest.actorAvatar, 
+          Some(commentResp.commentID)
+        )
+      }
+      response <- insert[Feed](feedCollection, feedData)
+      
+    }
+      yield (response)
+      
+
+  }
+
+  
+  
+
+
+/**
+  def getPostByID(postID: String): Future[Post] = {
+    search[Post](postCollection, document("postID" -> postID))
+  }  
+
+  
+  def insertNewCommentFeed(userRequest: CommentRequest, feedType: String, commentResp: Comment): Future[Feed] = {
+    for {
+      feedData <- Future {
+        Feed(BSONObjectID.generate().stringify, userRequest.memberID,userRequest.coyID,
+          feedType,
+          getPostByID(commentResp.postID).mapTo[Post],
           Some(userRequest.actorID),
           userRequest.actorName,
           userRequest.actorAvatar, Some(commentResp.commentID)
@@ -421,27 +433,28 @@ object PostDao {
       
     }
       yield (response)
-      
+
 
   }
-
+*/
 
   def insertNewLikeFeed(userRequest: LikePostRequest, feedType: String): Future[Feed] = {
     for {
       feedData <- Future {
-        Feed(BSONObjectID.generate().stringify, userRequest.memberID,
+        Feed(BSONObjectID.generate().stringify, userRequest.actorID,userRequest.coyID,
           feedType,
-          Post(userRequest.memberID,active,
+          Post(userRequest.memberID,None,active,
             userRequest.postID,
             DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
-            userRequest.title, userRequest.description, userRequest.message, userRequest.post_type,
-            userRequest.author, userRequest.author_avatar, userRequest.author_position,
-            userRequest.author_current_employer, userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
+            userRequest.title, userRequest.post_body, userRequest.message, userRequest.post_type,
+            userRequest.author, userRequest.author_avatar, userRequest.headline,
+            userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
             userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
             None
           ),
           Some(userRequest.actorID),
           userRequest.actorName,
+          userRequest.actorHeadline,
           userRequest.actorAvatar, None
         )
       }
@@ -452,15 +465,44 @@ object PostDao {
 
   }
 
-  def insertLikeFeedForComment(userRequest: Feed, feedType: String, memberID: String): Future[Feed] = {
+  
+
+  def insertNewShareFeed(userRequest: PostShare, feedType: String): Future[Feed] = {
     for {
       feedData <- Future {
-        Feed(BSONObjectID.generate().stringify, userRequest.memberID,
+        Feed(BSONObjectID.generate().stringify, userRequest.actorID,userRequest.coyID,
+          feedType,
+          Post(userRequest.memberID,None,active,
+            userRequest.postID,
+            DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),"",
+            userRequest.title, userRequest.post_body, userRequest.message, userRequest.post_type,
+            userRequest.author, userRequest.author_avatar, userRequest.headline,
+            userRequest.thumbnail_url, userRequest.provider_name, userRequest.provider_url,
+            userRequest.post_url, userRequest.cover_image, userRequest.readers, None,
+            None
+          ),
+          Some(userRequest.actorID),
+          userRequest.actorName,
+          userRequest.actorHeadline,
+          userRequest.actorAvatar, None
+        )
+      }
+      response <- insert[Feed](feedCollection, feedData)
+    }
+      yield (response)
+  }
+
+  def insertLikeFeedForReply(userRequest: Feed, feedType: String, memberID: String): Future[Feed] = {
+    for {
+      feedData <- Future {
+        Feed(BSONObjectID.generate().stringify, userRequest.memberID,userRequest.coyID,
           feedType,
           userRequest.postDetails,
-          Some(memberID),
-          None,
-          None, userRequest.commentID
+          userRequest.actorID,
+          userRequest.actorName,
+          userRequest.actorHeadline,
+          userRequest.actorAvatar,
+          userRequest.commentID
         )
       }
       response <- insert[Feed](feedCollection, feedData)
@@ -470,41 +512,100 @@ object PostDao {
 
   }
 
+/** Comment Like */
+  
   //like Comment
   def LikeComment(userRequest: LikeCommentRequest): Future[String] = {
     for {
-
       response <- update(commentCollection, BSONDocument("commentID" -> userRequest.commentID, "status" -> active), BSONDocument("$addToSet" -> BSONDocument("likes" -> userRequest.memberID)))
     }
+    yield (response)
+  }
+
+  // Get the comment feed by commentID 
+  def getFeedForComment(userRequest: LikeCommentRequest): Future[Option[Feed]] = {
+    search[Feed](feedCollection,
+      document("commentID" -> userRequest.commentID, "activityType" -> "Comment"))
+  }
+
+  // Insert comment_like feed 
+  def insertLikeFeedForComment(userRequest: Feed, feedType: String, memberID: String): Future[Feed] = {
+    for {
+      feedData <- Future {
+        Feed(BSONObjectID.generate().stringify, userRequest.memberID,userRequest.coyID,
+          feedType,
+          userRequest.postDetails,
+          userRequest.actorID,
+          userRequest.actorName,
+          userRequest.actorHeadline,
+          userRequest.actorAvatar,
+          userRequest.commentID
+        )
+      }
+      response <- insert[Feed](feedCollection, feedData)
+    }
       yield (response)
+  }
+
+
+  // Increment comment like count
+  def incrementLikeCommentCount(commentID: String) = {
+    println("okays"+commentID)
+    val selector = BSONDocument("commentID" -> commentID)
+    val result = for {
+      response <- update(commentCollection, selector, BSONDocument("$inc" -> BSONDocument("count.like" -> 1)))
+    }
+    yield("")
+  }
+
+  
+  /** Reply like */
+
+  // Increment reply like count
+  def incrementLikeReplyCount(replyID: String) = {
+    val selector = BSONDocument("replyID" -> replyID)
+    val result = for {
+
+      response <- update(replytCollection, selector, BSONDocument("$inc" -> BSONDocument("count.like" -> 1)))
+    }
+    yield("")
   }
 
   //Unlike Comment
   def UnLikeComment(commentID: String, memberID: String): Future[String] = {
     for {
-
       response <- update(commentCollection, BSONDocument("commentID" -> commentID, "status" -> active), BSONDocument("$pull" -> BSONDocument("likes" -> memberID)))
     }
       yield (response)
   }
 
+  // Decrement like comment count
+  def decrementLikeCommentCount(commentID: String) = {
+    val selector = BSONDocument("commentID" -> commentID)
+    val result = for {
 
-  private def getPaginationSort(page: PageRequest) = {
-    val sort: BSONDocument = BSONDocument(page.sort.map {
-      case (k, Asc) => (k, BSONInteger(1))
-      case (k, Desc) => (k, BSONInteger(-1))
-    })
-    sort
+      response <- update(commentCollection, selector, BSONDocument("$inc" -> BSONDocument("count.like" -> -1)))
+    }
+    yield("")
   }
+
+  
+  
+
+  /** Comment reply */
+  
+  // New comment reply 
 
   def insertNewReply(userRequest: ReplyRequest): Future[Reply] = {
 
     for {
       replyData <- Future {
         Reply(BSONObjectID.generate().stringify,
+          active,
           userRequest.commentID,
           userRequest.actorID,
           userRequest.actorName,
+          userRequest.actorHeadline,
           userRequest.actorAvatar, userRequest.reply_text,
           DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")
         )
@@ -514,20 +615,79 @@ object PostDao {
       yield (response)
   }
 
+  // Get the comment feed by commentID 
+  def getFeedForCommentReply(userRequest: ReplyRequest): Future[Option[Feed]] = {
+    search[Feed](feedCollection,
+      document("commentID" -> userRequest.commentID, "activityType" -> "Comment"))
+  }
+
+  // Create a feed reply
+   def insertReplyFeedForComment(userRequest: Feed, feedType: String, memberID: String): Future[Feed] = {
+    for {
+      feedData <- Future {
+        Feed(BSONObjectID.generate().stringify, userRequest.memberID,userRequest.coyID,
+          feedType,
+          userRequest.postDetails,
+          userRequest.actorID,
+          userRequest.actorName,
+          userRequest.actorHeadline,
+          userRequest.actorAvatar, 
+          userRequest.commentID
+        )
+      }
+      response <- insert[Feed](feedCollection, feedData)
+    }
+      yield (response)
+  }
+
+  // Count comment replies
+  def incrementReplyCount(replyResp: ReplyRequest) = {
+
+    val selector = BSONDocument("commentID" -> replyResp.commentID)
+    val result = for {
+      response <- update(commentCollection, selector, BSONDocument("$inc" -> BSONDocument("count.reply" -> 1)))
+    }
+    yield("")
+  }
+
+  //like reply
+  def LikeReply(userRequest: LikeReplyRequest): Future[String] = {
+    for {
+      response <- update(replytCollection, BSONDocument("replyID" -> userRequest.replyID, "status" -> active), BSONDocument("$addToSet" -> BSONDocument("likes" -> userRequest.memberID)))
+    }
+      yield (response)
+  }
+
+  // Get feed for like reply
+  /**
+  def getFeedForLikeReply(userRequest: LikeReplyRequest): Future[Option[Feed]] = {
+    search[Feed](feedCollection,
+      document("activityType" -> "reply_comment", "replyID"-> userRequest.replyID))
+  }
+  */
+
+  //Unlike Reply
+  def UnLikeReply(replyID: String, memberID: String): Future[String] = {
+    for {
+      response <- update(replytCollection, BSONDocument("replyID" -> replyID, "status" -> active), BSONDocument("$pull" -> BSONDocument("likes" -> memberID)))
+    }
+      yield (response)
+  }
+  
+  // Decrement r like count
+  def decrementReplyLikeCount(replyID: String) = {
+    val selector = BSONDocument("replyID" -> replyID)
+    val result = for {
+
+      response <- update(replytCollection, selector, BSONDocument("$inc" -> BSONDocument("count.like" -> -1)))
+    }
+    yield("")
+  }
+
 
   def getreply(commentID: String): Future[List[Reply]] = {
     searchAll[Reply](replytCollection,
-      document("commentID" -> commentID))
-  }
-
-  def getUpdateDetailsByID(memberID: String, coyID: String): Future[List[Update]] = {
-    searchAll[Update](updateCollection,
-      document("memberID" -> memberID, "coyID" -> coyID, "status" -> active))
-  }
-
-  def getOneUpdateDetails(memberID: String, postID: String): Future[Option[Update]] = {
-    search[Update](updateCollection,
-      document("memberID" -> memberID, "postID" -> postID, "status" -> active))
+      document("commentID" -> commentID, "status"-> active))
   }
 
 

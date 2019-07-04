@@ -7,8 +7,11 @@ import akka.util.Timeout
 import com.mj.users.config.MessageConfig
 import com.mj.users.model._
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.updateNewSharePost
+import com.mj.users.mongo.Neo4jConnector.updateNeo4j
+import com.mj.users.mongo.PostDao.{updateNewSharePost,insertNewShareFeed}
 import com.mj.users.notification.NotificationRoom
+import com.mj.users.model.JsonRepo._
+import spray.json._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -21,17 +24,27 @@ class SharePostProcessor extends Actor with MessageConfig with KafkaAccess {
 
     case (postDto: PostShare, notificationRoom: NotificationRoom) => {
       val origin = sender()
-      val result = updateNewSharePost(postDto).map(postResponse => {
-        // notificationRoom.notificationActor ! 1
-        origin ! responseMessage(postDto.postID, "", updateSuccess)
-      })
+        
+        val result = updateNewSharePost(postDto).map(postResponse => {
+            insertNewShareFeed(postDto, "Shared").flatMap(resp => {
+            notificationRoom.notificationActor ! resp
+            sendPostToKafka(resp.toJson.toString)
+            
+            println(resp)
+            val script = s"CREATE (s:feeds {memberID:'${postDto.actorID}', FeedID: '${resp._id}', comment_date: TIMESTAMP()})"
+            updateNeo4j(script)
+            
+            }).map(resp => origin ! postResponse)
+           
+          })
 
-
-      result.recover {
-        case e: Throwable => {
-          origin ! responseMessage(postDto.postID, e.getMessage, "")
-        }
-      }
+          result.recover {
+            case e: Throwable => {
+              origin ! responseMessage(postDto.postID, e.getMessage, "")
+            }
+          }
+      
+   
     }
   }
 }

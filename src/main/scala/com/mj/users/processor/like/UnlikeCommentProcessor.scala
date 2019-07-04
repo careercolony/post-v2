@@ -7,7 +7,7 @@ import akka.util.Timeout
 import com.mj.users.config.MessageConfig
 import com.mj.users.model.responseMessage
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.UnLikeComment
+import com.mj.users.mongo.PostDao.{UnLikeComment, decrementLikeCommentCount}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -22,7 +22,7 @@ class UnlikeCommentProcessor extends Actor with MessageConfig with KafkaAccess {
       val origin = sender()
       val result = UnLikeComment(commentID, memberID).
         map(resp => origin ! responseMessage(commentID, "", updateSuccess))
-
+        val decrese_comment_like_count = decrementLikeCommentCount(commentID)
       result.recover {
         case e: Throwable => {
           origin ! responseMessage("", e.getMessage, "")

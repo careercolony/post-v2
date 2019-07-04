@@ -1,4 +1,4 @@
-package com.mj.users.route.companyUpdate.update
+package com.mj.users.route.like
 
 import java.util.concurrent.TimeUnit
 
@@ -10,43 +10,43 @@ import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
-import com.mj.users.model.{responseMessage, _}
+import com.mj.users.model.responseMessage
 import org.slf4j.LoggerFactory
 import spray.json._
 
 import scala.util.{Failure, Success}
 
-trait GetOneUpdateRoute {
-  val GetOneUpdateUserLog = LoggerFactory.getLogger(this.getClass.getName)
+trait UnlikeReplyRoute {
+  val unLikeReplyUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def getOneUpdate(system: ActorSystem): Route = {
+  def unLikeReply(system: ActorSystem): Route = {
 
-    val GetOneUpdateProcessor = system.actorSelection("/*/getOneUpdateProcessor")
+    val unLikeReplyProcessor = system.actorSelection("/*/unLikeReplyProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("get-one-update" / "memberID" / Segment / "postID" / Segment) { (memberID: String, postID: String) =>
+    path("unlikereply" / "replyID" / Segment / "memberID" / Segment) { (replyID: String, memberID: String) =>
       get {
-        val userResponse = GetOneUpdateProcessor ? (memberID, postID)
+        val userResponse = unLikeReplyProcessor ? (replyID, memberID)
         onComplete(userResponse) {
           case Success(resp) =>
             resp match {
-              case s: Update => {
+              case s: responseMessage => if (s.successmsg.nonEmpty)
                 complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-              }
-              case s: responseMessage =>
+              else
                 complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
               case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
             }
           case Failure(error) =>
-            GetOneUpdateUserLog.error("Error is: " + error.getMessage)
+            unLikeReplyUserLog.error("Error is: " + error.getMessage)
             complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
         }
 
-
       }
     }
-
   }
+
 }
+
+

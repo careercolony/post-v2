@@ -9,7 +9,7 @@ import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{LikePostRequest, LikePostResponse, responseMessage}
 import com.mj.users.mongo.KafkaAccess
 import com.mj.users.mongo.Neo4jConnector.updateNeo4j
-import com.mj.users.mongo.PostDao.{LikePost, format, insertNewLikeFeed}
+import com.mj.users.mongo.PostDao.{LikePost, format, insertNewLikeFeed, incrementLikeCount}
 import com.mj.users.notification.NotificationRoom
 import reactivemongo.bson.BSONDateTime
 import spray.json._
@@ -30,10 +30,12 @@ class LikePostProcessor extends Actor with MessageConfig with KafkaAccess {
         insertNewLikeFeed(likePostRequestDto, "liked")).map(resp => {
         notificationRoom.notificationActor ! resp
         sendPostToKafka(resp.toJson.toString)
-        val script = s"CREATE (s:feeds {memberID:'${likePostRequestDto.memberID}', FeedID: '${resp._id}', likePost_date: TIMESTAMP()})"
+        
+        val script = s"CREATE (s:feeds {memberID:'${likePostRequestDto.actorID}', FeedID: '${resp._id}', likePost_date: TIMESTAMP()})"
         updateNeo4j(script)
 
-      }).map(resp => origin ! LikePostResponse(likePostRequestDto.memberID, likePostRequestDto.actorID, likePostRequestDto.postID, likePostRequestDto.like,  format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value))))
+        val feed_like_count = incrementLikeCount(likePostRequestDto)
+      }).map(resp => origin ! LikePostResponse(likePostRequestDto.memberID, likePostRequestDto.actorID, likePostRequestDto.actorHeadline, likePostRequestDto.actorAvatar,likePostRequestDto.actorName, likePostRequestDto.postID, likePostRequestDto.like,  format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value))))
 
 
       result.recover {

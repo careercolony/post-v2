@@ -38,7 +38,7 @@ trait GetAllLikesRoute extends MessageConfig {
               case s: List[Post] => {
                 val postLike = s.head.likes
                 if (postLike.isDefined) {
-                  val postResponse = postLike.get.map(response => LikePostResponse(s.head.memberID, response.likerID, s.head.postID, response.like, response.like_date))
+                  val postResponse = postLike.get.map(response => LikePostResponse(s.head.memberID, response.likerID, response.liker_headline, response.likerAvatar, response.likerName, s.head.postID, response.like, response.like_date))
                   complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, postResponse.toJson.toString)))
                 } else
                   complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", noRecordFound, "").toJson.toString)))

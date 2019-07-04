@@ -1,4 +1,4 @@
-package com.mj.users.route.companyUpdate.update
+package com.mj.users.route.activities
 
 import java.util.concurrent.TimeUnit
 
@@ -16,23 +16,23 @@ import spray.json._
 
 import scala.util.{Failure, Success}
 
-trait GetUpdateByMemberRoute {
-  val getUpdateByMemberUserLog = LoggerFactory.getLogger(this.getClass.getName)
+trait GetActivitiesRoute {
+  val getAllActivitiesUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def getUpdateByMember(system: ActorSystem): Route = {
+  def getActivities(system: ActorSystem): Route = {
 
-    val getUpdateByMemberProcessor = system.actorSelection("/*/getUpdateByMemberProcessor")
+    val getActivitiesProcessor = system.actorSelection("/*/getActivitiesProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("get-one-update" / "memberID" / Segment / "coyID" / Segment) { (memberID: String, coyID: String) =>
+    path("get-activities" / "memberID" / Segment) { memberID =>
       get {
-        val userResponse = getUpdateByMemberProcessor ? (memberID, coyID)
+        val userResponse = getActivitiesProcessor ? memberID
         onComplete(userResponse) {
           case Success(resp) =>
             resp match {
-              case s: List[Update] => {
+              case s: List[Activity] => {
                 complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
               }
               case s: responseMessage =>
@@ -40,13 +40,14 @@ trait GetUpdateByMemberRoute {
               case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
             }
           case Failure(error) =>
-            getUpdateByMemberUserLog.error("Error is: " + error.getMessage)
+            getAllActivitiesUserLog.error("Error is: " + error.getMessage)
             complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
         }
-
 
       }
     }
 
+
   }
+
 }

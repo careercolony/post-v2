@@ -8,7 +8,7 @@ import com.mj.users.config.MessageConfig
 import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{JobRequest, responseMessage}
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.{getJob, insertNewJobFeed}
+import com.mj.users.mongo.PostDao.{getJobFromCompany, insertNewJobFeed}
 import com.mj.users.mongo.Neo4jConnector.updateNeo4j
 import com.mj.users.notification.NotificationRoom
 import spray.json._
@@ -26,7 +26,7 @@ def receive = {
 
     case (jobRequestDto: JobRequest, notificationRoom: NotificationRoom) => {
       val origin = sender()
-      val result = getJob(jobRequestDto).flatMap(postResponse => {
+      val result = getJobFromCompany(jobRequestDto).flatMap(postResponse => {
         println(postResponse)
         insertNewJobFeed(postResponse, "Job").flatMap(feedResponse => {
           println(feedResponse.toJson.toString)

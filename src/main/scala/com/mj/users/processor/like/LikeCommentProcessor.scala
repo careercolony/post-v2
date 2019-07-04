@@ -8,7 +8,7 @@ import com.mj.users.config.MessageConfig
 import com.mj.users.model.JsonRepo._
 import com.mj.users.model._
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.{LikeComment, format, getFeedForComment, insertLikeFeedForComment}
+import com.mj.users.mongo.PostDao.{LikeComment, format, getFeedForComment, insertLikeFeedForComment, incrementLikeCommentCount}
 import com.mj.users.notification.NotificationRoom
 import reactivemongo.bson.BSONDateTime
 import spray.json._
@@ -26,9 +26,11 @@ class LikeCommentProcessor extends Actor with MessageConfig with KafkaAccess {
       val origin = sender()
       val result = LikeComment(likeCommentRequestDto).flatMap(resp =>
         getFeedForComment(likeCommentRequestDto)).flatMap(
-        resp => insertLikeFeedForComment(resp.get, "liked", likeCommentRequestDto.memberID)
+        resp => insertLikeFeedForComment(resp.get, "like_comment", likeCommentRequestDto.commentID)
       ).map(response => {
         notificationRoom.notificationActor ! response
+        val comment_like_count = incrementLikeCommentCount(likeCommentRequestDto.commentID)
+      
         origin ! LikeCommentResponse(likeCommentRequestDto.memberID, likeCommentRequestDto.commentID, likeCommentRequestDto.like, format.format(new java.util.Date(BSONDateTime(System.currentTimeMillis).value)))
       })
 

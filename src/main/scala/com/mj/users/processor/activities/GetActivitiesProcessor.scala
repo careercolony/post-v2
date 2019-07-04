@@ -1,4 +1,4 @@
-package com.mj.users.processor.companyUpdate.update
+package com.mj.users.processor.activities
 
 import java.util.concurrent.TimeUnit
 
@@ -6,23 +6,24 @@ import akka.actor.Actor
 import akka.util.Timeout
 import com.mj.users.config.MessageConfig
 import com.mj.users.model.responseMessage
-import com.mj.users.mongo.PostDao.getUpdateDetailsByID
+import com.mj.users.mongo.KafkaAccess
+import com.mj.users.mongo.PostDao.getActivities
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class GetUpdateByMemberProcessor extends Actor with MessageConfig{
+class GetActivitiesProcessor extends Actor with MessageConfig with KafkaAccess {
 
   implicit val timeout = Timeout(500, TimeUnit.SECONDS)
 
 
   def receive = {
 
-    case (memberID: String, coyID:String) => {
+    case (memberID: String) => {
       val origin = sender()
-      val result = getUpdateDetailsByID(memberID, coyID).map(response =>
+      val result = getActivities(memberID).map(response =>
         response match {
           case List() => origin ! responseMessage("", noRecordFound, "")
-          case _ =>  origin ! response
+          case _ => origin ! response
         }
       )
 
@@ -34,3 +35,5 @@ class GetUpdateByMemberProcessor extends Actor with MessageConfig{
     }
   }
 }
+
+

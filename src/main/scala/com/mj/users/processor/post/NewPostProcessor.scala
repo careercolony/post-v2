@@ -25,10 +25,11 @@ class NewPostProcessor extends Actor with MessageConfig with KafkaAccess {
     case (postRequestDto: PostRequest, notificationRoom: NotificationRoom) => {
       val origin = sender()
       val result = insertNewPost(postRequestDto).flatMap(postResponse => {
-        println(postResponse)
+        //println(postResponse)
         insertNewPostFeed(postResponse, "Post").flatMap(feedResponse => {
-          println(feedResponse.toJson.toString)
-          notificationRoom.notificationActor ! feedResponse
+          //println(feedResponse.toJson.toString)
+          //notificationRoom.notificationActor ! feedResponse
+          println("Hello world")
           sendPostToKafka(feedResponse.toJson.toString)
           val script = s"CREATE (s:feeds {memberID:'${postRequestDto.memberID}', FeedID: '${feedResponse._id}', post_date: TIMESTAMP()})"
           updateNeo4j(script)

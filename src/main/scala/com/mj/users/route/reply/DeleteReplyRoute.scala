@@ -1,4 +1,4 @@
-package com.mj.users.route.companyUpdate.update
+package com.mj.users.route.reply
 
 import java.util.concurrent.TimeUnit
 
@@ -10,25 +10,27 @@ import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
-import com.mj.users.model.{responseMessage, _}
+import com.mj.users.model.responseMessage
 import org.slf4j.LoggerFactory
 import spray.json._
 
 import scala.util.{Failure, Success}
 
-trait DeleteUpdateRoute {
-  val DeleteUpdateUserLog = LoggerFactory.getLogger(this.getClass.getName)
+trait DeleteReplyRoute {
+  val deleteReplyUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def deleteUpdate(system: ActorSystem): Route = {
+  def deleteReply(system: ActorSystem): Route = {
 
-    val DeleteUpdateProcessor = system.actorSelection("/*/deleteUpdateProcessor")
+    val deleteReplyProcessor = system.actorSelection("/*/deleteReplyProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("delete-update" / "memberID" / Segment / "postID" / Segment) { (memberID: String, postID: String) =>
+    path("delete-reply" / "replyID" / Segment) { replyId: String =>
       get {
-        val userResponse = DeleteUpdateProcessor ? (memberID , postID)
+
+
+        val userResponse = deleteReplyProcessor ? replyId
         onComplete(userResponse) {
           case Success(resp) =>
             resp match {
@@ -39,13 +41,13 @@ trait DeleteUpdateRoute {
               case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
             }
           case Failure(error) =>
-            DeleteUpdateUserLog.error("Error is: " + error.getMessage)
+            deleteReplyUserLog.error("Error is: " + error.getMessage)
             complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
         }
 
 
       }
     }
-
   }
+
 }

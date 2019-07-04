@@ -9,7 +9,7 @@ import com.mj.users.model.JsonRepo._
 import com.mj.users.model.{CommentRequest, responseMessage}
 import com.mj.users.mongo.KafkaAccess
 import com.mj.users.mongo.Neo4jConnector.updateNeo4j
-import com.mj.users.mongo.PostDao.{insertNewComment, insertNewCommentFeed}
+import com.mj.users.mongo.PostDao.{insertNewComment, insertNewCommentFeed, incrementCommentCount}
 import com.mj.users.notification.NotificationRoom
 import spray.json._
 
@@ -28,13 +28,16 @@ class NewCommentProcessor extends Actor with MessageConfig with KafkaAccess {
         insertNewCommentFeed(commentRequestDto, "Comment", commentResponse).flatMap(resp => {
           notificationRoom.notificationActor ! resp
           sendPostToKafka(resp.toJson.toString)
-          val script = s"CREATE (s:feeds {memberID:'${commentRequestDto.memberID}', FeedID: '${resp._id}', comment_date: TIMESTAMP()})"
+          println(commentResponse)
+          // Increment comment count
+          val post_comment_count = incrementCommentCount(commentResponse)
+          
+          val script = s"CREATE (s:feeds {memberID:'${commentRequestDto.actorID}', FeedID: '${resp._id}', comment_date: TIMESTAMP()})"
           updateNeo4j(script)
-
+      
         }).map(resp => origin ! commentResponse)
       }
       )
-
 
       result.recover {
         case e: Throwable => {
@@ -44,3 +47,8 @@ class NewCommentProcessor extends Actor with MessageConfig with KafkaAccess {
     }
   }
 }
+
+
+
+
+

@@ -55,13 +55,14 @@ object Server extends App {
 
   val newReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.NewReplyProcessor]), "newReplyProcessor")
   val getRepliesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.GetRepliesProcessor]), "getRepliesProcessor")
+  val deleteReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.DeleteReplyProcessor]), "deleteReplyProcessor")
+  val likeReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.LikeReplyProcessor]), "likeReplyProcessor")
+  val unLikeReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.UnlikeReplyProcessor]), "unLikeReplyProcessor")
 
+  val getActivitiesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.activities.GetActivitiesProcessor]), "getActivitiesProcessor")
+  
+  
   // Update
-  val newUpdateProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.NewUpdateProcessor]), "newUpdateProcessor")
-  val editUpdateProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.EditUpdateProcessor]), "editUpdateProcessor")
-  val GetOneUpdateProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.GetOneUpdateProcessor]), "getOneUpdateProcessor")
-  val GetUpdateByMemberProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.GetUpdateByMemberProcessor]), "getUpdateByMemberProcessor")
-  val DeleteUpdateProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.DeleteUpdateProcessor]), "deleteUpdateProcessor")
   val newJobFeedProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.companyUpdate.update.NewJobFeedProcessor]), "newJobFeedProcessor")
   
   // Notification feeds
