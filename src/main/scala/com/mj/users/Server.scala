@@ -46,6 +46,8 @@ object Server extends App {
   val unLikeCommentProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.UnlikeCommentProcessor]), "unLikeCommentProcessor")
   val getCommentCountProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.comment.GetCommentCountProcessor]), "getCommentCountProcessor")
   val deleteCommentProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.comment.DeleteCommentProcessor]), "deleteCommentProcessor")
+  val updateCommentProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.comment.UpdateCommentProcessor]), "updateCommentProcessor")
+
 
 
   val sharePostProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.post.SharePostProcessor]), "sharePostProcessor")
@@ -56,8 +58,10 @@ object Server extends App {
   val newReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.NewReplyProcessor]), "newReplyProcessor")
   val getRepliesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.GetRepliesProcessor]), "getRepliesProcessor")
   val deleteReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.DeleteReplyProcessor]), "deleteReplyProcessor")
+  val updateReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.reply.UpdateReplyProcessor]), "updateReplyProcessor")
   val likeReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.LikeReplyProcessor]), "likeReplyProcessor")
   val unLikeReplyProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.like.UnlikeReplyProcessor]), "unLikeReplyProcessor")
+  
 
   val getActivitiesProcessor = system.actorOf(RoundRobinPool(poolSize).props(Props[processor.activities.GetActivitiesProcessor]), "getActivitiesProcessor")
   

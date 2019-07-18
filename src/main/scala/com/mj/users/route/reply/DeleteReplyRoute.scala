@@ -26,11 +26,11 @@ trait DeleteReplyRoute {
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("delete-reply" / "replyID" / Segment) { replyId: String =>
+    path("delete-reply" / "replyID" / Segment / "feedID" / Segment) { (replyId: String, feedID: String) =>
       get {
 
 
-        val userResponse = deleteReplyProcessor ? replyId
+        val userResponse = deleteReplyProcessor ? (replyId, feedID)
         onComplete(userResponse) {
           case Success(resp) =>
             resp match {

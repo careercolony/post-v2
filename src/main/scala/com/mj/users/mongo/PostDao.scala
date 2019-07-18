@@ -233,7 +233,7 @@ object PostDao {
     val selector = BSONDocument("postID" -> postID)
     val result = for {
 
-      response <- update(postCollection, selector, BSONDocument("$inc" -> BSONDocument("count.like" -> -1)))
+      response <- update(postCollection, selector, BSONDocument("$inc" -> BSONDocument("count.comment" -> -1)))
     }
     yield("")
   }
@@ -265,9 +265,10 @@ object PostDao {
           userRequest.actorName,
           userRequest.actorHeadline,
           userRequest.postID,
-          userRequest.comment_text,
+          userRequest.comment_body,
           DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),
           "",
+          None,
           None
         )
       }
@@ -282,6 +283,16 @@ object PostDao {
     val result = for {
 
       response <- update(postCollection, selector, BSONDocument("$inc" -> BSONDocument("count.comment" -> 1)))
+    }
+    yield("")
+  }
+
+  def decrementCommentCount(commentResp: Comment) = {
+
+    val selector = BSONDocument("postID" -> commentResp.postID)
+    val result = for {
+
+      response <- update(postCollection, selector, BSONDocument("$inc" -> BSONDocument("count.comment" -> -1)))
     }
     yield("")
   }
@@ -306,6 +317,45 @@ object PostDao {
     searchAll[Comment](commentCollection,
       document("postID" -> postID, "status" -> active))
   }
+
+/**
+  def updateCommentFeed(commentRequest: Comment, feedType: String): Future[String] = {
+
+    val selector = BSONDocument("postDetails.commentID" -> commentRequest.commentID, "activityType" -> "Comment")
+    val result = for {
+
+      response <- update(feedCollection, selector, BSONDocument(
+        "$set" -> BSONDocument("postDetails" -> commentRequest)
+      ))
+    }
+      yield (response)
+
+    result.recover {
+      case e: Throwable => {
+        println("msg:" + e.getMessage)
+        throw new Exception(e.getMessage)
+      }
+
+
+    }
+  }
+*/
+  def updateComment(commentRequest: Comment): Future[String] =  {
+    for {
+
+      response <- updateDetails[Comment](commentCollection, BSONDocument("commentID" -> commentRequest.commentID), commentRequest.copy(updated_date =  DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
+    }
+      yield (response)
+  }
+
+  def updateReply(replyRequest: Reply): Future[String] =  {
+    for {
+
+      response <- updateDetails[Reply](replytCollection, BSONDocument("replyID" -> replyRequest.replyID), replyRequest.copy(updated_date =  DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ")))
+    }
+      yield (response)
+  }
+
 
   
 
@@ -522,6 +572,7 @@ object PostDao {
     yield (response)
   }
 
+
   // Get the comment feed by commentID 
   def getFeedForComment(userRequest: LikeCommentRequest): Future[Option[Feed]] = {
     search[Feed](feedCollection,
@@ -559,6 +610,8 @@ object PostDao {
   }
 
   
+
+  
   /** Reply like */
 
   // Increment reply like count
@@ -589,6 +642,14 @@ object PostDao {
     yield("")
   }
 
+  def deleteCommentLkeFeed(feedID:String) = {
+    val selector = BSONDocument("feedID" -> feedID)
+    val result = for {
+
+      response <- remove(feedCollection, selector)
+    }
+    yield("")
+  }
   
   
 
@@ -596,6 +657,7 @@ object PostDao {
   
   // New comment reply 
 
+  /**
   def insertNewReply(userRequest: ReplyRequest): Future[Reply] = {
 
     for {
@@ -614,18 +676,43 @@ object PostDao {
     }
       yield (response)
   }
+  */
+
+  
+
+  def ReplyComment(userRequest: ReplyCommentRequest): Future[Reply] = {
+
+    for {
+      replyData <- Future {
+        Reply(BSONObjectID.generate().stringify,
+          active,
+          userRequest.commentID,
+          userRequest.actorID,
+          userRequest.actorName,
+          userRequest.actorHeadline,
+          userRequest.actorAvatar, userRequest.reply_body,
+          DateTime.now.toString("yyyy-MM-dd'T'HH:mm:ssZ"),
+          "", 
+          None, 
+          None
+        )
+      }
+      response <- insert[Reply](replytCollection, replyData)
+    }
+      yield (response)
+  }
 
   // Get the comment feed by commentID 
-  def getFeedForCommentReply(userRequest: ReplyRequest): Future[Option[Feed]] = {
+  def getFeedForCommentReply(userRequest: ReplyCommentRequest): Future[Option[Feed]] = {
     search[Feed](feedCollection,
       document("commentID" -> userRequest.commentID, "activityType" -> "Comment"))
   }
 
   // Create a feed reply
-   def insertReplyFeedForComment(userRequest: Feed, feedType: String, memberID: String): Future[Feed] = {
+   def insertReplyFeedForComment(userRequest: Feed, feedType: String, actorID: String): Future[Feed] = {
     for {
       feedData <- Future {
-        Feed(BSONObjectID.generate().stringify, userRequest.memberID,userRequest.coyID,
+        Feed(BSONObjectID.generate().stringify, actorID ,userRequest.coyID,
           feedType,
           userRequest.postDetails,
           userRequest.actorID,
@@ -641,7 +728,7 @@ object PostDao {
   }
 
   // Count comment replies
-  def incrementReplyCount(replyResp: ReplyRequest) = {
+  def incrementReplyCommentCount(replyResp: ReplyCommentRequest) = {
 
     val selector = BSONDocument("commentID" -> replyResp.commentID)
     val result = for {
@@ -653,18 +740,18 @@ object PostDao {
   //like reply
   def LikeReply(userRequest: LikeReplyRequest): Future[String] = {
     for {
-      response <- update(replytCollection, BSONDocument("replyID" -> userRequest.replyID, "status" -> active), BSONDocument("$addToSet" -> BSONDocument("likes" -> userRequest.memberID)))
+      response <- update(replytCollection, BSONDocument("replyID" -> userRequest.replyID, "status" -> active), BSONDocument("$addToSet" -> BSONDocument("likes" -> userRequest.actorID)))
     }
       yield (response)
   }
 
   // Get feed for like reply
-  /**
+  
   def getFeedForLikeReply(userRequest: LikeReplyRequest): Future[Option[Feed]] = {
     search[Feed](feedCollection,
-      document("activityType" -> "reply_comment", "replyID"-> userRequest.replyID))
+      document("activityType" -> "reply_comment", "commentID"-> userRequest.commentID))
   }
-  */
+  
 
   //Unlike Reply
   def UnLikeReply(replyID: String, memberID: String): Future[String] = {

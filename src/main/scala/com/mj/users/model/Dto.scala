@@ -66,7 +66,7 @@ case class Comment(commentID: String, coyID:Option[String], status : String ,mem
 
 */
 
-case class CommentRequest(memberID: String, coyID:Option[String], postID: String, comment_text: Option[String],
+case class CommentRequest(memberID: String, coyID:Option[String], postID: String, comment_body: Option[String],
                           actorID: String, actorName: Option[String], actorAvatar: Option[String], actorHeadline: Option[String],
                           author_avatar: Option[String], headline: Option[String],
                           title: Option[String],
@@ -79,8 +79,10 @@ case class CommentRequest(memberID: String, coyID:Option[String], postID: String
 
 case class Comment(commentID: String, status : String ,memberID: String,
                    avatar: Option[String], fullname: Option[String], actorHeadline:Option[String],
-                   postID: String, comment_text: Option[String],
-                   comment_date: String,updated_date : String, likes: Option[List[String]])
+                   postID: String, comment_body: Option[String],
+                   comment_date: String,updated_date : String, likes: Option[List[String]], count:Option[String])
+
+//case class CommentUpdateRequest(postID: String, status:String, commentID:String, comment_body:String, memberID:String, comment_update_date:String  )
 
 case class LikePostRequest(memberID: String, postID: String, coyID:Option[String], like: Option[String],
                            actorID: String, actorName: Option[String], actorAvatar: Option[String], actorHeadline: Option[String],
@@ -140,7 +142,7 @@ case class responseMessage(uid: String, errmsg: String, successmsg: String)
 case class LikeCommentRequest(memberID: String, commentID: String, like: Option[String])
 
 //Reply like
-case class LikeReplyRequest(memberID: String, replyID: String, like: Option[String])
+case class LikeReplyRequest(actorID: String, replyID: String, commentID: String, like: Option[String])
 
 case class GetFriends(memberID: String)
 
@@ -148,14 +150,18 @@ case class LikeCommentResponse(memberID: String, commentID: String, like: Option
 
 case class LikeReplyResponse(memberID: String, replyID: String, like: Option[String], like_date: String)
 
-case class ReplyRequest(actorID: String, commentID: String, actorName: String, actorHeadline:Option[String],
-                        actorAvatar: Option[String], reply_text: Option[String])
+case class ReplyCommentRequest(actorID: String, commentID: String, actorName: String, actorHeadline:Option[String],
+                        actorAvatar: Option[String], reply_body: Option[String])
+
+case class ReplyCommentRespone(actorID: String, commentID: String, actorName: String, actorHeadline:Option[String],
+                        actorAvatar: Option[String], reply_body: Option[String], reply_date:String)
 
 
 case class Reply(replyID: String, status: String, commentID: String, actorID: String,
                  actorName: String, actorHeadline:Option[String], actorAvatar: Option[String],
-                 reply_text: Option[String],
-                 reply_date: String)
+                 reply_body: Option[String],
+                 reply_date: String, updated_date : String, likes:Option[List[String]], count:Option[String]
+                )
 
 
 object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
@@ -168,14 +174,16 @@ object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val errorMessageDtoFormats: RootJsonFormat[responseMessage] = jsonFormat3(responseMessage)
   //implicit val actionRequestFormats: RootJsonFormat[CommentAction] = jsonFormat6(CommentAction)
   implicit val commentRequestFormats: RootJsonFormat[CommentRequest] = jsonFormat22(CommentRequest)
+  //implicit val commentUpdateRequestFormats: RootJsonFormat[CommentUpdateRequest] = jsonFormat6(CommentUpdateRequest)
+  
   implicit val likePostRequestFormats: RootJsonFormat[LikePostRequest] = jsonFormat22(LikePostRequest)
   implicit val likePostResponseFormats: RootJsonFormat[LikePostResponse] = jsonFormat8(LikePostResponse)
   implicit val likeCommentRequestFormats: RootJsonFormat[LikeCommentRequest] = jsonFormat3(LikeCommentRequest)
-  implicit val likeReplyRequestFormats: RootJsonFormat[LikeReplyRequest] = jsonFormat3(LikeReplyRequest)
+  implicit val likeReplyRequestFormats: RootJsonFormat[LikeReplyRequest] = jsonFormat4(LikeReplyRequest)
   implicit val likeCommentResponseFormats: RootJsonFormat[LikeCommentResponse] = jsonFormat4(LikeCommentResponse)
   implicit val likeReplyResponseFormats: RootJsonFormat[LikeReplyResponse] = jsonFormat4(LikeReplyResponse)
   implicit val postShareRequestFormats: RootJsonFormat[PostShare] = jsonFormat22(PostShare)
-  implicit val commentFormats: RootJsonFormat[Comment] = jsonFormat11(Comment)
+  implicit val commentFormats: RootJsonFormat[Comment] = jsonFormat12(Comment)
   implicit val feedFormats: RootJsonFormat[Feed] = jsonFormat10(Feed)
   implicit val activityFormats: RootJsonFormat[Activity] = jsonFormat10(Activity)
   //implicit val feedUpdateFormats: RootJsonFormat[FeedUpdate] = jsonFormat8(FeedUpdate)
@@ -185,7 +193,9 @@ object JsonRepo extends DefaultJsonProtocol with SprayJsonSupport {
   implicit val feedJobFormats: RootJsonFormat[FeedJob] = jsonFormat7(FeedJob)
   
   implicit val readerFeedRequestFormats: RootJsonFormat[ReaderFeedRequest] = jsonFormat2(ReaderFeedRequest)
-  implicit val replyRequestFormats: RootJsonFormat[ReplyRequest] = jsonFormat6(ReplyRequest)
-  implicit val replyResponseFormats: RootJsonFormat[Reply] = jsonFormat9(Reply)
+  implicit val replyCommentRequestFormats: RootJsonFormat[ReplyCommentRequest] = jsonFormat6(ReplyCommentRequest)
+  implicit val replyCommentResponseFormats: RootJsonFormat[ReplyCommentRespone] = jsonFormat7(ReplyCommentRespone)
+  
+  implicit val replyResponseFormats: RootJsonFormat[Reply] = jsonFormat12(Reply)
 
 }

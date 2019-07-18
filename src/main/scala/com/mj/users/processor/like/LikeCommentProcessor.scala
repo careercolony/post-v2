@@ -8,7 +8,7 @@ import com.mj.users.config.MessageConfig
 import com.mj.users.model.JsonRepo._
 import com.mj.users.model._
 import com.mj.users.mongo.KafkaAccess
-import com.mj.users.mongo.PostDao.{LikeComment, format, getFeedForComment, insertLikeFeedForComment, incrementLikeCommentCount}
+import com.mj.users.mongo.PostDao.{LikeComment, format, getFeedForComment, insertLikeFeedForComment,  incrementLikeCommentCount}
 import com.mj.users.notification.NotificationRoom
 import reactivemongo.bson.BSONDateTime
 import spray.json._

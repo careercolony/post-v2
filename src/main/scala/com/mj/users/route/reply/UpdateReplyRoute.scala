@@ -5,9 +5,8 @@ import java.util.concurrent.TimeUnit
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes.BadRequest
 import akka.http.scaladsl.model.{HttpEntity, HttpResponse, MediaTypes}
-import akka.http.scaladsl.server.Directives.{as, complete, entity, path, post, _}
+import akka.http.scaladsl.server.Directives.{as, complete, entity, path, _}
 import akka.http.scaladsl.server.Route
-import com.mj.users.notification.NotificationRoom
 import akka.pattern.ask
 import akka.util.Timeout
 import com.mj.users.model.JsonRepo._
@@ -17,33 +16,32 @@ import spray.json._
 
 import scala.util.{Failure, Success}
 
-trait NewReplyRoute {
-  val newReplyUserLog = LoggerFactory.getLogger(this.getClass.getName)
+trait UpdateReplyRoute {
+  val updateReplyUserLog = LoggerFactory.getLogger(this.getClass.getName)
 
 
-  def newReply(system: ActorSystem, notificationRoom: NotificationRoom): Route = {
+  def updateReply(system: ActorSystem): Route = {
 
-    val newReplyProcessor = system.actorSelection("/*/newReplyProcessor")
+    val updateReplyProcessor = system.actorSelection("/*/updateReplyProcessor")
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("new-reply") {
-      post {
-        entity(as[ReplyCommentRequest]) { dto =>
+    path("update-reply") {
+      put {
+        entity(as[Reply]) { dto =>
 
-          val userResponse = newReplyProcessor ? (dto, notificationRoom)
+          val userResponse = updateReplyProcessor ? dto
           onComplete(userResponse) {
             case Success(resp) =>
               resp match {
-                case s: ReplyCommentRespone => {
+                case s: responseMessage => if (s.successmsg.nonEmpty)
                   complete(HttpResponse(entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
-                }
-                case s: responseMessage =>
+                else
                   complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, s.toJson.toString)))
                 case _ => complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", resp.toString, "").toJson.toString)))
               }
             case Failure(error) =>
-              newReplyUserLog.error("Error is: " + error.getMessage)
+              updateReplyUserLog.error("Error is: " + error.getMessage)
               complete(HttpResponse(status = BadRequest, entity = HttpEntity(MediaTypes.`application/json`, responseMessage("", error.getMessage, "").toJson.toString)))
           }
 

@@ -26,11 +26,11 @@ trait DeleteCommentRoute {
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("delete-comment" / "commentID" / Segment) { commentId: String =>
+    path("delete-comment" / "commentID" / Segment / "postID" / Segment / "feedID" / Segment) { (commentId: String, postID: String, feedID: String) =>
       get {
 
 
-        val userResponse = deleteCommentProcessor ? commentId
+        val userResponse = deleteCommentProcessor ? (commentId, postID, feedID)
         onComplete(userResponse) {
           case Success(resp) =>
             resp match {

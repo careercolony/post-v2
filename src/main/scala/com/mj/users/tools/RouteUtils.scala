@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Directives.pathPrefix
 import akka.http.scaladsl.server._
 import akka.stream.ActorMaterializer
 import com.mj.users.notification.NotificationRoom
-import com.mj.users.route.comment.{GetCommentCountRoute, GetCommentRoute, NewCommentRoute}
+import com.mj.users.route.comment.{GetCommentCountRoute, GetCommentRoute, NewCommentRoute, UpdateCommentRoute}
 import com.mj.users.route.activities.{GetActivitiesRoute}
 import com.mj.users.route.experience._
 import com.mj.users.route.like._
@@ -14,18 +14,18 @@ import com.mj.users.route.notification.{NotificationService, UpdateFeedReaders}
 import com.mj.users.route.post._
 import com.mj.users.route.companyUpdate.update._
 import com.mj.users.route.companyUpdate.update.{NewJobFeedRoute}
-import com.mj.users.route.reply.{GetRepliesRoute, NewReplyRoute, DeleteReplyRoute}
+import com.mj.users.route.reply.{GetRepliesRoute, NewReplyRoute, DeleteReplyRoute,UpdateReplyRoute}
 import org.joda.time.DateTime
 import com.mj.users.config.Application._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute with GetCommentRoute
+object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute with UpdateCommentRoute with GetCommentRoute
   with LikePost with UnlikePost with GetAllPostRoute with LikeReplyRoute with UnlikeReplyRoute
   with NewJobFeedRoute with GetCommentCountRoute with GetMemberIDPostRoute with GetFriendsPostRoute with GetFriendsNotifyFeedRoute with SharePostRoute
   with LikeComment with UnlikeComment with NotificationService with UpdateFeedReaders 
   with DeleteCommentRoute with DeletePostRoute with GetActivitiesRoute
-  with DeleteReplyRoute with NewReplyRoute with GetRepliesRoute with GetAllLikesRoute {
+  with DeleteReplyRoute with NewReplyRoute with UpdateReplyRoute with GetRepliesRoute with GetAllLikesRoute {
 
 
   /*  createUsersCollection()
@@ -95,10 +95,10 @@ object RouteUtils extends NewPostRoute with UpdatePostRoute with NewCommentRoute
                  materializer: ActorMaterializer) = {
     //val notificationRoom: NotificationRoom = new NotificationRoom(system)
     println("notificationRoom:"+notificationRoom)
-    newPost(system, notificationRoom) ~ getActivities(system) ~ updatePost(system) ~ newComment(system, notificationRoom) ~ getComment(system) ~
+    newPost(system, notificationRoom) ~ getActivities(system) ~ updatePost(system) ~ newComment(system, notificationRoom) ~ updateComment(system) ~ getComment(system) ~
       getFriendsNotifyFeeds(system) ~ likePost(system, notificationRoom) ~ likeReply(system, notificationRoom) ~ unLikeReply(system) ~ unLikePost(system) ~ getAllPost(system) ~ getCommentCount(system) ~ getMemberIDPost(system) ~ getFriendsPost(system) ~
       newJobFeed(system,notificationRoom) ~ sharePost(system, notificationRoom) ~ likeComment(system, notificationRoom) ~ unLikeComment(system) ~ notification(system, notificationRoom) ~
-      updateReader(system) ~ deletePost(system) ~ deleteComment(system) ~ newReply(system)  ~ deleteReply(system) ~ getRepliesRoute(system) ~ getAllLikes(system)
+      updateReader(system) ~ deletePost(system) ~ deleteComment(system) ~ newReply(system, notificationRoom) ~ updateReply(system) ~ deleteReply(system) ~ getRepliesRoute(system) ~ getAllLikes(system)
 
   }
 

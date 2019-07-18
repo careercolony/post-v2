@@ -7,7 +7,7 @@ import akka.util.Timeout
 import com.mj.users.config.MessageConfig
 import com.mj.users.model.responseMessage
 import com.mj.users.mongo.MongoConnector.remove
-import com.mj.users.mongo.PostDao.replytCollection
+import com.mj.users.mongo.PostDao.{replytCollection, feedCollection}
 import reactivemongo.bson.document
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -20,9 +20,10 @@ class DeleteReplyProcessor extends Actor with MessageConfig {
 
   def receive = {
 
-    case (replyID: String) => {
+    case (replyID: String, feedID:String) => {
       val origin = sender()
 
+      val remove_feed = remove(feedCollection, document("_id" -> feedID)) 
       val result = remove(replytCollection, document("replyID" -> replyID))
         .flatMap(upResult => Future {
           responseMessage("", "", deleteSuccess)

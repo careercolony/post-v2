@@ -26,9 +26,9 @@ trait UnlikeReplyRoute {
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("unlikereply" / "replyID" / Segment / "memberID" / Segment) { (replyID: String, memberID: String) =>
+    path("unlikereply" / "replyID" / Segment / "feedID" /Segment / "memberID" / Segment) { (replyID: String, feedID: String, memberID: String) =>
       get {
-        val userResponse = unLikeReplyProcessor ? (replyID, memberID)
+        val userResponse = unLikeReplyProcessor ? (replyID, feedID, memberID)
         onComplete(userResponse) {
           case Success(resp) =>
             resp match {

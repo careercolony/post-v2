@@ -26,9 +26,9 @@ trait UnlikeComment {
     implicit val timeout = Timeout(20, TimeUnit.SECONDS)
 
 
-    path("unlike-comment" / "commentID" / Segment / "memberID" / Segment) { (commentID: String, memberID: String) =>
+    path("unlike-comment" / "commentID" / Segment / "feedID" / Segment / "memberID" / Segment) { (commentID: String, feedID: String, memberID: String) =>
       get {
-        val userResponse = unLikeCommentProcessor ? (commentID, memberID)
+        val userResponse = unLikeCommentProcessor ? (commentID, feedID, memberID)
         onComplete(userResponse) {
           case Success(resp) =>
             resp match {
